@@ -1,0 +1,35 @@
+<div class="card" furyPagePadding furyScrollbar furyPage>
+  <mat-card>
+    <mat-card-content fxLayout="column">
+      <form [formGroup]="form1">
+        <div fxLayoutGap="8px">
+          <mat-form-field fxFlex>
+            <input formControlName="startDate" type="text" matInput placeholder="開始時間"
+              [matDatepicker]="startDate" readonly>
+            <mat-datepicker-toggle [for]="startDate" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #startDate touchUi="true"></mat-datepicker>
+            <mat-error *ngIf="form1.get('startDate').hasError('required')">「開始時間」為必填欄位</mat-error>
+          </mat-form-field>
+
+
+          <mat-form-field fxFlex>
+            <input formControlName="endDate" type="text" matInput placeholder="結束時間" [matDatepicker]="endDate"
+              readonly>
+            <mat-datepicker-toggle [for]="endDate" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #endDate touchUi="true"></mat-datepicker>
+            <mat-error *ngIf="form1.get('endDate').hasError('required')">「結束時間」為必填欄位</mat-error>
+          </mat-form-field>
+        </div>
+      </form>
+
+      <div fxLayout="row" fxLayoutAlign="end center">
+          <button color="warn" mat-raised-button type="button" (click)="reset()">重設</button>
+        <button color="primary" mat-raised-button style="margin-left: 8px;" type="button"
+          (click)="onSubmit()">匯出</button>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

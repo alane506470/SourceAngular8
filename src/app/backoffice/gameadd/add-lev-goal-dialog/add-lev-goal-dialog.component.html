@@ -1,0 +1,102 @@
+<!-- 關卡標題 -->
+<h2 mat-dialog-title *ngIf="type==='add'">
+  新增關卡
+</h2>
+<h2 mat-dialog-title *ngIf="type==='modify'">
+  修改關卡
+</h2>
+<!-- 獎勵標題 -->
+<h2 mat-dialog-title *ngIf="type==='addgoal'">
+  新增關卡獎勵
+</h2>
+<h2 mat-dialog-title *ngIf="type==='modifygoal'">
+  修改關卡獎勵
+</h2>
+<!-- 新增關卡 -->
+<mat-dialog-content *ngIf="type==='add'">
+  <mat-form-field fxFlex hintLabel="最多輸入40個字">
+    <input matInput type="text" placeholder="關卡名稱" id="levName" maxlength=40>
+  </mat-form-field>
+  <br>
+  <mat-form-field fxFlex hintLabel="最多輸入24個數字">
+    <input matInput type="text" placeholder="商品" id="sku" maxlength=24>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions *ngIf="type==='add'">
+  <button mat-raised-button color="primary" (click)="confirm()">確認</button>
+  <button mat-raised-button mat-dialog-close color="warn">取消</button>
+</mat-dialog-actions>
+<!-- 修改關卡 -->
+<mat-dialog-content *ngIf="type==='modify'">
+  <mat-form-field fxFlex hintLabel="最多輸入40個字">
+    <input matInput type="text" placeholder="關卡名稱" id="levName" maxlength=40 [(ngModel)]="levName">
+  </mat-form-field>
+  <br>
+  <mat-form-field fxFlex hintLabel="最多輸入24個數字">
+    <input matInput type="text" placeholder="商品" id="sku" maxlength=24 [(ngModel)]="sku">
+  </mat-form-field>
+</mat-dialog-content>
+  <mat-dialog-actions *ngIf="type==='modify'">
+    <button mat-raised-button color="primary" (click)="confirm()">確認</button>
+    <button mat-raised-button mat-dialog-close color="warn">取消</button>
+  </mat-dialog-actions>
+<!-- 新增獎勵 -->
+
+<mat-dialog-content *ngIf="type==='addgoal'">
+  <mat-form-field fxFlex>
+    <mat-select [(ngModel)]="tempGoalLevId" placeholder="關卡" required>
+      <mat-option *ngFor="let list of levListArray" [value]="list.levId">第{{list.levId}}關---{{list.levName}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <br>
+  <mat-form-field fxFlex>
+    <mat-select [(ngModel)]="rebate" placeholder="獎勵類別" required>
+      <mat-option [value]="'20'">折價券</mat-option>
+      <mat-option [value]="'10'">紅利點數</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <br>
+  <mat-form-field fxFlex hintLabel="最多輸入12個數字" >
+    <input matInput type="text" placeholder="折價券代碼" id="grno" maxlength=12 >
+  </mat-form-field>
+  <br>
+  <mat-form-field fxFlex hintLabel="最多輸入12個數字" >
+    <input matInput type="text" placeholder="紅利點數代碼" id="marketId" maxlength=12>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions *ngIf="type==='addgoal'">
+  <button mat-raised-button color="primary" (click)="confirm2()">確認</button>
+  <button mat-raised-button mat-dialog-close color="warn">取消</button>
+</mat-dialog-actions>
+<!-- 修改獎勵 -->
+<mat-dialog-content *ngIf="type==='modifygoal'">
+  <mat-form-field fxFlex>
+    <mat-select [(ngModel)]="tempGoalLevId" placeholder="關卡" required>
+      <mat-option *ngFor="let list of levListArray" [value]="list.levId">第{{list.levId}}關---{{list.levName}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <br>
+  <mat-form-field fxFlex>
+
+    <mat-select [(ngModel)]="rebate" placeholder="獎勵類別" required>
+      <mat-option [value]="'20'">折價券</mat-option>
+      <mat-option [value]="'10'">紅利點數</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <br>
+  <mat-form-field fxFlex hintLabel="最多輸入12個數字" >
+    <input matInput type="text" placeholder="折價券代碼" id="grno" maxlength=12 [(ngModel)]="grno" >
+  </mat-form-field>
+  <br>
+  <mat-form-field fxFlex hintLabel="最多輸入12個數字" >
+    <input matInput type="text" placeholder="紅利點數代碼" id="marketId" maxlength=12 [(ngModel)]="marketId" >
+  </mat-form-field>
+
+
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="type==='modifygoal'">
+  <button mat-raised-button color="primary" (click)="confirm2()">確認</button>
+  <button mat-raised-button mat-dialog-close color="warn">取消</button>
+</mat-dialog-actions>

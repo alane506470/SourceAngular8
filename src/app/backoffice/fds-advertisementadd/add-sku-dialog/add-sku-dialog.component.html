@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>
+    新增商品清單
+  </h2>
+  
+  <mat-dialog-content *ngIf="type==='1'">
+    <mat-form-field fxFlex hintLabel="最多輸入18個字">
+      <input matInput type="text" placeholder="請輸入商品代碼" id="skuid" maxlength=18>
+    </mat-form-field>
+  
+  </mat-dialog-content>
+  
+  <mat-dialog-actions *ngIf="type==='1'">
+    <button mat-raised-button color="primary" (click)="confirm()">確認</button>
+    <button mat-raised-button mat-dialog-close color="warn">取消</button>
+  </mat-dialog-actions>
+  
+  <mat-dialog-content *ngIf="type==='2'">
+    <input type='file' (change)="fileChanged($event)" accept="txt,csv">
+    <div style="color:red;font-size:13px;">檔案格式為TXT或CSV</div>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions *ngIf="type==='2'">
+    <button color="primary" 
+    mat-raised-button style="margin-left: 8px;" (click)="uploadDocument()" type="button" [disabled]="file?false:true">上傳</button>
+    <button mat-raised-button mat-dialog-close color="warn">取消</button>
+  </mat-dialog-actions>

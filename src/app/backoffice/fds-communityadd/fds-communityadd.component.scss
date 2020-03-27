@@ -1,0 +1,35 @@
+@import "var";
+[furyScrollbar] > ::ng-deep .scroll-content {
+  max-width: 100%;
+}
+
+mat-card {
+  padding: 0;
+}
+
+@media screen and (max-width:959px) {
+  mat-card {
+    min-width: 100vw !important;
+  }
+}
+
+@media screen and (min-width:959px) {
+  mat-card {
+    min-width: 74vw !important;
+  }
+}
+
+.fds-communityadd {
+  //background: url('/assets/img/backgrounds/form-wizard.jpg');
+  background-size: cover;
+
+}
+.card {
+    width:auto;
+    height:auto;
+}
+.mat-dialog-content {
+    height:auto;
+    max-height:150%;
+    overflow:auto;  
+  }

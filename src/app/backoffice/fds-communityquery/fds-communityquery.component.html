@@ -1,0 +1,72 @@
+<div class="fds-communityquery" furyPage furyPagePadding furyScrollbar>
+  <div class="demo-preview" fxLayout="row" fxLayoutAlign="center center">
+            <mat-card fxFlex="100%">
+                <mat-card-content fxLayout="column">
+                          <form [formGroup]="form1">
+                              <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="8px">
+                                <mat-form-field fxFlex>
+                                  <mat-select formControlName="commId" placeholder="社區名稱" >
+                                      <mat-option *ngFor="let data of communityList" [value]="data.commId">{{data.commName}}</mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </div>
+                              <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                                <mat-form-field fxFlex>
+                                  <mat-select formControlName="commAdd1" placeholder="社區所在縣市" (selectionChange)="changeTownshipId($event.value)" >
+                                      <mat-option *ngFor="let data of getCountyId" [value]="data.code">{{data.name}}</mat-option>
+                                  </mat-select>
+                                  <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error>
+                                </mat-form-field>
+                              </div>
+                              <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                                <mat-form-field fxFlex>
+                                  <mat-select formControlName="commAdd2" placeholder="社區所在縣鎮市區">
+
+                                    <mat-option *ngFor="let data of getTownshipId" [value]="data.code">{{data.name}}</mat-option>
+                                  </mat-select>
+                                  <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣鎮市區」為必填欄位</mat-error>
+                                </mat-form-field>
+                              </div>
+                          </form>
+                          <div fxLayout="row" fxLayoutAlign="end center">
+                            <button color="primary" mat-raised-button style="margin-left: 8px;"  type="button"  (click)="getCommunity()" 
+                            [disabled]="!(form1.get('commId').value || form1.get('commAdd1').value || form1.get('commAdd2').value)">查詢</button>
+                          </div>
+                  </mat-card-content>
+              </mat-card>
+  </div>
+  <mat-table #table [dataSource]="dataSource" >
+    <ng-container *ngFor="let column of columns">
+        <ng-container *ngIf="column.isModelProperty" [matColumnDef]="column.property">
+            <mat-header-cell *matHeaderCellDef> {{ column.name }}</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{ row[column.property] }}</mat-cell>
+        </ng-container>
+    </ng-container>
+
+    <ng-container matColumnDef="management">
+        <mat-header-cell *matHeaderCellDef>
+            編輯社區
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <button mat-icon-button mat-icon-button matTooltip="預覽" color="primary" (click)="updateCommunity(row);$event.stopPropagation();">
+                <mat-icon>touch_app</mat-icon>
+            </button>
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="houseinfo">
+      <mat-header-cell *matHeaderCellDef>
+          住戶資料
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row">
+          <button mat-icon-button mat-icon-button matTooltip="預覽" color="primary" (click)="downloadHouse(row);$event.stopPropagation();">
+              <mat-icon>touch_app</mat-icon>
+          </button>
+      </mat-cell>
+  </ng-container>
+    <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: visibleColumns;"  class="clickable" ></mat-row>
+  </mat-table>
+  <mat-paginator [length]="resultsLength"  [pageIndex]="0" [pageSize]="10"></mat-paginator>
+
+</div>
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

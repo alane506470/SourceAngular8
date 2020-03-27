@@ -1,0 +1,91 @@
+<div class="card" furyPagePadding furyScrollbar furyPage>
+    <mat-card>
+      <mat-card-content fxLayout="column">
+        <form [formGroup]="form1">
+          <div fxLayout="column" style="padding: 16px; ">
+
+            <div fxLayoutGap="8px">
+              <div class="search-wrapper" fxLayout="row" [ngClass]="{ 'focus': focused, 'has-input': input }" fxFlex
+                (furyClickOutside)="closeDropdown()">
+                <mat-form-field fxFlex>
+
+                  <input formControlName="userName" [(ngModel)]="input" (focus)="openDropdown()"
+                    (ngModelChange)="this.searchTerm$.next($event)" matInput type="search" placeholder="社區管家姓名">
+                  <mat-error *ngIf="form1.get('userName').hasError('required')">「社區管家姓名」為必填欄位</mat-error>
+                </mat-form-field>
+
+                <div class="search-dropdown">
+                  <div class="content results" *ngIf="input" fxLayout="column">
+                    <div class="heading" fxLayout="row" fxLayoutAlign="start center">
+                      <mat-icon class="icon">search</mat-icon>
+                      Search results for: {{ input}}
+                    </div>
+                    <div class="items">
+                      <div class="item" matRipple *ngFor="let Item of dynamicUser"
+                        (click)="closeDropdown(); selectUserInCharge(Item)">
+                        {{Item.userName}} {{Item.userId}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <ng-container *ngIf="getSiteInCharge$ | async as SIC; else loading">
+                <mat-form-field fxFlex>
+                  <mat-select formControlName="siteInCharge" placeholder="負責分店">
+                    <mat-option *ngFor="let data of SIC" [value]="data.code">{{data.name}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="form1.get('siteInCharge').hasError('required')">「負責分店」為必填欄位</mat-error>
+                </mat-form-field>
+              </ng-container>
+            </div>
+          </div>
+        </form>
+
+        <div fxLayout="row" fxLayoutAlign="end center">
+          <button mat-raised-button style="margin-left: 8px;" type="button" (click)="reset()">
+            重設
+          </button>
+          <button color="primary" mat-raised-button style="margin-left: 8px;" type="button" (click)="query()"
+            [disabled]="this.form1.invalid">查詢</button>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+
+
+    <mat-table #table [dataSource]="dataSource">
+      <ng-container *ngFor="let column of columns">
+        <ng-container *ngIf="column.isModelProperty" [matColumnDef]="column.property">
+          <mat-header-cell *matHeaderCellDef> {{ column.name }}</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{ row[column.property] }}</mat-cell>
+        </ng-container>
+      </ng-container>
+
+      <ng-container matColumnDef="management">
+      <mat-header-cell *matHeaderCellDef>
+        編輯管家明細
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <button mat-icon-button mat-icon-button matTooltip="編輯" color="primary" (click)="update(row)">
+          <mat-icon>touch_app</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+      <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: visibleColumns;" class="clickable"></mat-row>
+    </mat-table>
+    <mat-paginator [length]="resultsLength" [pageIndex]="0" [pageSize]="10"></mat-paginator>
+
+    <div fxLayout="row" fxLayoutAlign="end center">
+      <button id="submitButtom" color="primary" mat-raised-button style="margin-left: 8px;"
+        [disabled]='dataSource.data.length === 0' type="submit" (click)="onSubmit()">匯出</button>
+    </div>
+</div>
+
+<ng-template #loading>
+  <fury-loading-overlay [isLoading]="isLoadingSIC"></fury-loading-overlay>
+</ng-template>
+
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

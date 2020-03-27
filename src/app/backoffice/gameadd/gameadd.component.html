@@ -1,0 +1,137 @@
+<div class="gameadd" furyScrollbar fxLayout="row" fxLayoutAlign="center start">
+  <div class="card">
+    <mat-dialog-content class="card_dailog">
+      <mat-card fxFlex="100%" style="padding: 0;">
+        <mat-toolbar color="primary">遊戲設定功能</mat-toolbar>
+        <mat-card-content class="mattab">
+          <fieldset id="fiel1">
+            <mat-tab-group [selectedIndex]="selectedIndex">
+              <mat-tab color="primary" label="遊戲主檔">
+                <form [formGroup]="form1">
+                  <div fxLayout="column" style="padding: 16px; ">
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                      <mat-form-field fxFlex>
+                        <input matInput type="text" placeholder="遊戲編號" formControlName="gameId" readonly>
+                      </mat-form-field>
+                      <mat-form-field fxFlex hintLabel="最多輸入40個字">
+                        <input matInput type="text" placeholder="遊戲名稱" required formControlName="gameDesc" maxlength=40>
+                        <mat-hint align="end">{{ form1.get('gameDesc').value?.length }}/40</mat-hint>
+                      </mat-form-field>
+                    </div>
+
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                      <div fxLayoutAlign="start center">適用通路：
+                        <mat-radio-group fxLayout="row" fxLayoutGap="16px" formControlName="channelId" required>
+                          <mat-radio-button *ngFor="let data of getChannelId" [value]="data.codeNo">{{ data.codeExplain
+                            }}</mat-radio-button>
+                        </mat-radio-group>
+                        <mat-error *ngIf="form1.get('channelId').hasError('required')">「適用通路」為必填欄位</mat-error>
+                      </div>
+                    </div>
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                      <mat-form-field fxFlex>
+                        <input type="text" matInput placeholder="生效起日時間" [matDatepicker]="msgStartDate" [min]="isUpdateMode() ? null:datePickerMinDate"
+                          [max]="isUpdateMode() ? null:datePickerMaxDate" formControlName="startDate" required readonly>
+                        <mat-datepicker-toggle [for]="msgStartDate" matSuffix></mat-datepicker-toggle>
+                        <mat-datepicker #msgStartDate touchUi="true"></mat-datepicker>
+                        <mat-error *ngIf="form1.get('startDate').hasError('required')">「生效起日時間」為必填欄位</mat-error>
+                      </mat-form-field>
+                      <mat-form-field fxFlex>
+                        <input type="text" matInput placeholder="生效迄日時間" required [matDatepicker]="msgEndDate" [min]="isUpdateMode() ? null:datePickerMinDate"
+                          [max]="isUpdateMode() ? null:datePickerMaxDate" formControlName="endDate" readonly>
+                        <mat-datepicker-toggle [for]="msgEndDate" matSuffix></mat-datepicker-toggle>
+                        <mat-datepicker #msgEndDate touchUi="true"></mat-datepicker>
+                        <mat-error *ngIf="form1.get('endDate').hasError('required')">「生效迄日時間」為必填欄位</mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                      <mat-form-field fxFlex>
+                        <input matInput type="text" placeholder="活動狀態" [value]="this.gameStatusValue" readonly>
+                        <input matInput type="text" placeholder="活動狀態" formControlName="gameStatus" hidden=true>
+                      </mat-form-field>
+
+                      <mat-form-field fxFlex>
+                        <mat-select formControlName="frequency" placeholder="遊戲活動頻率" required>
+                          <mat-option *ngFor="let freq of gameFreqList" [value]="freq.codeNo">{{ freq.codeExplain }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="form1.get('frequency').hasError('required')">「遊戲活動頻率」為必填欄位</mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div fxLayout="row" fxLayoutAlign="end center">
+                      <button color="primary" mat-raised-button style="margin-left: 8px;" [disabled]="this.defaults.actStatus === 'D'?false:!form1.valid"
+                      (click)="nextStep()" type="button">下一頁</button>
+                  </div>
+
+                </form>
+              </mat-tab>
+                <mat-tab color="primary" label="遊戲關卡/達成獎勵設定" [disabled]="!form1.valid">
+
+                <mat-toolbar>關卡清單
+                  <button mat-icon-button color="primary" matTooltip="新增關卡" (click)="addLevList()" [disabled]="this.defaults.actStatus === 'D'? true:false">
+                    <mat-icon>add</mat-icon>
+                  </button>
+
+                </mat-toolbar>
+                <mat-list>
+                  <mat-list-item *ngFor="let list of levListArray;let recordIndex = index">
+                    <h3 matLine>第{{ recordIndex+1 }}關卡</h3>
+                    <h3 matLine>關卡名稱：{{ list.levName }}</h3>
+                    <p matLine>
+                      <span class="title">商品：{{ list.sku }} </span>
+                    </p>
+                    <button mat-icon-button color="primary" matTooltip="修改" (click)="modifyLevList(list)" [disabled]="this.defaults.gameStatus === 'D'? true:false">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" matTooltip="移除" (click)="deleteLevList(list)" [disabled]="this.defaults.gameStatus === 'D'? true:false">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+
+                  </mat-list-item>
+                </mat-list>
+
+                <mat-toolbar>獎勵清單
+                  <button mat-icon-button color="primary" matTooltip="新增獎勵" (click)="addGoalList()" [disabled]="this.defaults.gameStatus === 'D'? true:false">
+                    <mat-icon>add</mat-icon>
+                  </button>
+
+                </mat-toolbar>
+                <mat-list>
+                  <mat-list-item *ngFor="let list of goalListArray">
+                    <h3 matLine>第{{ list.levId }}關</h3>
+                    <h3 matLine *ngIf="list.rebateMethod==='10'">獎勵類型：紅利點數</h3>
+                    <h3 matLine *ngIf="list.rebateMethod==='20'">獎勵類型：折價券</h3>
+
+                    <p matLine>
+                      <span class="title" *ngIf="list.grno">折價券代碼：{{ list.grno }} </span>
+                      <span class="title" *ngIf="list.marketId">紅利點數代碼：{{ list.marketId }} </span>
+                    </p>
+
+
+                    <button mat-icon-button color="primary" matTooltip="修改" (click)="modifyGoalList(list)" [disabled]="this.defaults.gameStatus === 'D'? true:false">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" matTooltip="移除" (click)="deleteGoalList(list)" [disabled]="this.defaults.gameStatus === 'D'? true:false">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+
+                  </mat-list-item>
+                </mat-list>
+                <div fxLayout="row" fxLayoutAlign="end center">
+                    <button mat-raised-button type="button" (click)="previousStep()">上一頁</button>
+                    <button mat-raised-button type="button" style="margin-left: 8px;" (click)="reset()" [disabled]="this.defaults.gameStatus === 'D'? true:false">重設</button>
+                    <button mat-raised-button type="button" *ngIf="isUpdateMode()" (click)="deleteClick()" style="margin-left: 8px;" [disabled]="this.defaults.gameStatus === 'D'? true:false">刪除</button>
+                    <button id="submitButtom" color="primary" mat-raised-button style="margin-left: 8px;" [disabled]="this.defaults.gameStatus === 'D'? true:!(this.form1.valid && this.levListArray.length>0 && this.goalListArray.length>0 )"
+                                  type="submit" (click)="onSubmit()">儲存</button>
+                  </div>
+
+              </mat-tab>
+            </mat-tab-group>
+          </fieldset>
+        </mat-card-content>
+      </mat-card>
+    </mat-dialog-content>
+  </div>
+</div>
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

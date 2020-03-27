@@ -1,0 +1,70 @@
+<form [formGroup]="form2">
+  <div fxLayout="column" style="padding: 16px; ">
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <input formControlName="buildCompany" matInput type="text" placeholder="建設公司">
+        <mat-error *ngIf="form2.get('buildCompany').hasError('maxlength')">「建設公司」不可超過40個字</mat-error>
+      </mat-form-field>
+
+
+      <mat-form-field fxFlex>
+        <input formControlName="buildDate" type="text" matInput placeholder="完工日期" [matDatepicker]="msgStartDate"
+          readonly>
+        <mat-datepicker-toggle [for]="msgStartDate" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #msgStartDate touchUi="true"></mat-datepicker>
+        <!-- <mat-error *ngIf="form1.get('buildDate').hasError('required')">「完工日期」為必填欄位</mat-error> -->
+      </mat-form-field>
+    </div>
+
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <mat-select formControlName="commType" placeholder="社區類型" multiple>
+          <mat-option *ngFor="let data of getcomm_type$ | async" [value]="data.code">{{data.name}}</mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <mat-select formControlName="commPattern" placeholder="格局類型" multiple>
+          <mat-option *ngFor="let data of getcomm_pattern$ | async" [value]="data.code">{{data.name}}
+          </mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+      </mat-form-field>
+    </div>
+
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <mat-select formControlName="interiorType" placeholder="室內隔間" multiple>
+          <mat-option *ngFor="let data of getinterior_type$ | async" [value]="data.code">{{data.name}}</mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <mat-select formControlName="buildExterior" placeholder="建築外觀" multiple>
+          <mat-option *ngFor="let data of getbuild_exterior$ | async" [value]="data.code">{{data.name}}
+          </mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+      </mat-form-field>
+    </div>
+
+    <mat-form-field fxFlex>
+      <input formControlName="house_age" matInput type="text" placeholder="屋齡" readonly>
+    </mat-form-field>
+
+    <div>
+        <ng-content select="mat-form-field"></ng-content>
+    </div>
+
+
+
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
+      <button color="warn" mat-raised-button type="button" (click)="reset(this.form2)">重設</button>
+      <button mat-raised-button type="button" [disabled]="this.form2.invalid" (click)="saveForm()">儲存</button>
+      <ng-content select="button"></ng-content>
+    </div>
+
+  </div>
+</form>

@@ -1,0 +1,55 @@
+@import "var";
+
+[furyScrollbar] > ::ng-deep .scroll-content {
+  max-width: 100%;
+}
+
+@media screen and (max-width:959px) {
+  mat-card {
+    min-width: 100vw !important;
+  }
+}
+
+@media screen and (min-width:959px) {
+  mat-card {
+    min-width: 74vw !important;
+  }
+}
+
+.messageadd {
+  //background: url('/assets/img/backgrounds/form-wizard.jpg');
+  background-size: cover;
+
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+}
+
+.card {
+  max-width:auto;
+  height:auto;
+}
+// .card_dailog {max-height: 90vh;
+// }
+.mat-dialog-content {height:auto;
+  max-height:150%;
+  overflow:auto;  
+}
+
+// .table{
+//   border:3px #cccccc solid;
+//   text-align:center;
+// }
+
+.classtr{
+  height:auto;width:auto;vertical-align:middle;
+}
+
+.table {
+  text-align:center;
+   border:1
+}

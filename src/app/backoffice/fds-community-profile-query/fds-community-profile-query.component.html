@@ -1,0 +1,103 @@
+<div class="card" furyPagePadding furyScrollbar furyPage>
+  <div fxLayout="column">
+    <mat-card fxFlex="100%">
+      <mat-card-content fxLayout="column">
+        <form [formGroup]="form1">
+          <div fxLayoutGap="8px">
+            <mat-form-field fxFlex>
+              <input formControlName="commName" matInput type="text" placeholder="社區名稱">
+              <mat-error *ngIf="form1.get('commName').hasError('maxlength')">「社區名稱」不可超過40個字</mat-error>
+            </mat-form-field>
+          </div>
+
+
+          <div fxLayoutGap="8px">
+            <mat-form-field fxFlex>
+              <mat-select formControlName="commAdd1" placeholder="社區所在縣市"
+                (selectionChange)="changeTownshipId($event.value)">
+                <mat-option *ngFor="let data of getCountyId" [value]="data.code">{{data.name}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error>
+
+            </mat-form-field>
+            <mat-form-field fxFlex>
+              <mat-select formControlName="commAdd2" placeholder="社區所在鄉鎮市區">
+                <mat-option *ngFor="let data of getTownshipId" [value]="data.code">{{data.name}}
+                </mat-option>
+              </mat-select>
+              <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+            </mat-form-field>
+          </div>
+
+          <div fxLayoutGap="8px">
+            <mat-form-field fxFlex>
+              <mat-select formControlName="siteInCharge" placeholder="負責分店">
+                <mat-option *ngFor="let data of getSiteInCharge$ | async" [value]="data.code">{{data.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <div class="search-wrapper" fxLayout="row" [ngClass]="{ 'focus': focused, 'has-input': input }" fxFlex
+              (furyClickOutside)="closeDropdown()">
+              <mat-form-field fxFlex>
+
+                <input formControlName="userInCharge" [(ngModel)]="input" (focus)="openDropdown()"
+                  (ngModelChange)="this.searchTerm$.next($event)" matInput type="search" placeholder="負責社區管家">
+              </mat-form-field>
+
+              <div class="search-dropdown">
+                <div class="content results" *ngIf="input" fxLayout="column">
+                  <div class="heading" fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon class="icon">search</mat-icon>
+                    Search results for: {{ input}}
+                  </div>
+                  <div class="items">
+                    <div class="item" matRipple *ngFor="let Item of dynamicUser"
+                      (click)="closeDropdown(); selectUserInCharge(Item)">
+                      {{Item.userName}} {{Item.userId}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+      <div fxLayout="row" fxLayoutAlign="end center">
+          <button mat-raised-button style="margin-left: 8px;" type="button" (click)="reset()">
+            重設
+          </button>
+          <button color="primary" mat-raised-button style="margin-left: 8px;" type="button" (click)="sendForm()"
+            >查詢</button>
+        </div>
+    </mat-card>
+
+    <mat-table #table [dataSource]="dataSource">
+        <ng-container *ngFor="let column of columns">
+          <ng-container *ngIf="column.isModelProperty" [matColumnDef]="column.property">
+            <mat-header-cell *matHeaderCellDef> {{ column.name }}</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{ row[column.property] }}</mat-cell>
+          </ng-container>
+        </ng-container>
+
+        <ng-container matColumnDef="management">
+          <mat-header-cell *matHeaderCellDef>
+            編輯社區主檔
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <button mat-icon-button mat-icon-button matTooltip="編輯" color="primary" (click)="update(row)">
+              <mat-icon>touch_app</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: visibleColumns;" class="clickable"></mat-row>
+      </mat-table>
+      <mat-paginator [length]="resultsLength" [pageIndex]="0" [pageSize]="10"></mat-paginator>
+
+  </div>
+</div>
+
+
+
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

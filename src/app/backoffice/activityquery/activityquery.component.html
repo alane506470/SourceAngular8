@@ -1,0 +1,92 @@
+<div class="activityquery" furyPage furyPagePadding furyScrollbar>
+    <div class="demo-preview" fxLayout="row" fxLayoutAlign="center center">
+        <mat-card fxFlex="100%">
+            <mat-card-content fxLayout="column">
+                <form [formGroup]="form1">
+                    <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="8px">
+
+                        <mat-form-field fxFlex hintLabel="最多輸入40個字">
+                            <input matInput type="text" placeholder="活動名稱" formControlName="actDesc" required maxlength=40>
+                            <mat-hint align="end">{{ form1.get('actDesc').value?.length }}/40</mat-hint>
+                            <!-- <mat-error *ngIf="form1.get('actDesc').hasError('maxLength')">「活動名稱」不可超過40字元</mat-error> -->
+                            <mat-error *ngIf="form1.get('actDesc').hasError('required')">「活動名稱」為必填欄位</mat-error>
+                        </mat-form-field>
+                        <mat-form-field fxFlex>
+                            <mat-select formControlName="cutId" placeholder="APP版位" required>
+                                <mat-option *ngFor="let data of cutTypeList" [value]="data.cutId">{{ data.cutDesc }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="form1.get('cutId').hasError('required')">「APP版位」為必填欄位</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                        <mat-label fxLayoutAlign="end center">
+                            <!-- <input name="name" matInput placeholder="發送日期區間"> -->
+                            發送開始日期區間 ：
+                        </mat-label>
+
+                        <mat-form-field fxFlex>
+                            <input type="text" matInput placeholder="起" [matDatepicker]="m1" formControlName="actStartDate" readonly>
+                            <mat-datepicker-toggle [for]="m1" matSuffix></mat-datepicker-toggle>
+                            <mat-datepicker #m1 touchUi="true"></mat-datepicker>
+                        </mat-form-field>
+
+                        <mat-form-field fxFlex>
+                            <input type="text" matInput placeholder="迄" [matDatepicker]="m2" formControlName="actEndDate" readonly>
+                            <mat-datepicker-toggle [for]="m2" matSuffix></mat-datepicker-toggle>
+                            <mat-datepicker #m2 touchUi="true"></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                        <div fxLayoutAlign="start center">適用通路：
+                            <mat-radio-group fxLayout="row" fxLayoutGap="16px" formControlName="channelId" required>
+                                <mat-radio-button *ngFor="let data of getChannelId" [value]="data.codeNo">{{ data.codeExplain }}</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="form1.get('channelId').hasError('required')">「適用通路」為必填欄位</mat-error>
+                        </div>
+                    </div>
+
+                    <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="8px">
+                        <mat-form-field fxFlex>
+                        <mat-select formControlName="actStatus" placeholder="活動狀態" required>
+                            <mat-option *ngFor="let actStatus of getActStatus" [value]="actStatus.codeNo">{{ actStatus.codeExplain }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="form1.get('actStatus').hasError('required')">「活動狀態」為必填欄位</mat-error>
+                        </mat-form-field>
+                    </div>
+
+                </form>
+                <div fxLayout="row" fxLayoutAlign="end center">
+                    <!-- <button color="primary" mat-raised-button style="margin-left: 8px;" (click)="getActStock()" type="button">查詢</button> -->
+                    <button [disabled]="!this.form1.valid" color="primary" mat-raised-button style="margin-left: 8px;" (click)="getActStock()"
+                        type="button">查詢</button>
+                </div>
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <mat-table #table [dataSource]="dataSource">
+        <ng-container *ngFor="let column of columns">
+            <ng-container *ngIf="column.isModelProperty" [matColumnDef]="column.property">
+                <mat-header-cell *matHeaderCellDef> {{ column.name }}</mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{ row[column.property] }}</mat-cell>
+            </ng-container>
+        </ng-container>
+        <ng-container matColumnDef="management">
+            <mat-header-cell *matHeaderCellDef>
+                操作
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row">
+                <button mat-icon-button mat-icon-button matTooltip="預覽" color="primary" (click)="previewAct(row);$event.stopPropagation();">
+                    <mat-icon>remove_red_eye</mat-icon>
+                </button>
+            </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: visibleColumns;" (click)="updateCustomer(row)" class="clickable"></mat-row>
+    </mat-table>
+
+    <mat-paginator class="paginator" [length]="resultsLength" [pageSize]="pageSize"></mat-paginator>
+
+</div>
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

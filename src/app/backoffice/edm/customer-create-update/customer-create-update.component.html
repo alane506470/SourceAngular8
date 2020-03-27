@@ -1,0 +1,92 @@
+<h2 mat-dialog-title>GiftStock</h2>
+<form [formGroup]="form" (ngSubmit)="save()">
+  <mat-dialog-content>
+      <mat-card fxFlex="100%" style="padding: 0;">
+          <mat-card-content>
+              <mat-tab-group [selectedIndex]="selectedIndex">
+                <mat-tab color="primary" label="活動設定">
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+                        <mat-form-field fxFlex>
+                          <input type="text" type="text" placeholder="折價券活動代碼" formControlName="grno" readonly matInput>
+                        </mat-form-field>
+                        <mat-form-field fxFlex>
+                        <input matInput type="text" placeholder="折價券活動名稱" required formControlName="name">
+                      </mat-form-field>  
+                      </div>
+                      <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+                          <mat-form-field fxFlex>
+                          <mat-select formControlName="giftType" placeholder="折價券類別" required>
+                              <mat-option value="1">折價券</mat-option>
+                              <mat-option value="2">官方訊息</mat-option>
+                            </mat-select>
+                            </mat-form-field>
+                          <mat-form-field fxFlex>
+                              <mat-select  formControlName="msgYn" placeholder="是否發送訊息" required>
+                                  <mat-option value="Y">YES</mat-option>
+                                  <mat-option value="N">NO</mat-option>
+                                </mat-select>
+                        </mat-form-field>  
+                        </div>
+                </mat-tab>
+                <mat-tab label="發送對象"></mat-tab>
+              </mat-tab-group>
+            </mat-card-content>
+        </mat-card>
+
+<!-- 
+    <div class="person">
+      <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+        <mat-form-field fxFlex>
+          <mat-placeholder>Channel Id</mat-placeholder>
+          <input type="text" formControlName="channelId" matInput>
+        </mat-form-field>
+
+        <mat-form-field fxFlex>
+          <mat-placeholder>建立日期</mat-placeholder>
+          <input type="text" formControlName="createDate" matInput>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <mat-form-field fxFlex>
+        <mat-placeholder>Gift Id</mat-placeholder>
+        <input type="text" formControlName="giftId" matInput>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <mat-form-field fxFlex>
+        <mat-placeholder>庫存數</mat-placeholder>
+        <input type="text" formControlName="giftStock" matInput>
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <mat-placeholder>贈品數</mat-placeholder>
+        <input type="text" formControlName="giftTotal" matInput>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <mat-form-field fxFlex>
+        <mat-placeholder>活動編號</mat-placeholder>
+        <input type="text" formControlName="grno" matInput>
+      </mat-form-field>
+    </div>
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <mat-form-field fxFlex>
+        <mat-placeholder>發送數量</mat-placeholder>
+        <input type="text" formControlName="recStock" matInput>
+      </mat-form-field>
+    </div>
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <mat-form-field fxFlex>
+        <mat-placeholder>門店</mat-placeholder>
+        <input type="text" formControlName="storeId" matInput>
+      </mat-form-field>
+    </div> -->
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+    <button *ngIf="isCreateMode()" mat-button [disabled]="!form.valid">CREATE CUSTOMER</button>
+    <button *ngIf="isUpdateMode()" mat-button [disabled]="!form.valid">UPDATE CUSTOMER</button>
+  </mat-dialog-actions>
+</form>

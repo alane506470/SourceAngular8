@@ -1,0 +1,57 @@
+<div class="repairadd" furyScrollbar fxLayout="row" fxLayoutAlign="center start">
+    <mat-dialog-content class="card_dailog">
+      <mat-toolbar color="primary">諮詢單</mat-toolbar>
+      <fieldset id="fiel1">
+        <form [formGroup]="form1">
+          <div fxLayout="column" style="padding: 16px; ">
+            <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+              <mat-form-field fxFlex>
+                <input matInput type="text" placeholder="社區" formControlName="commName" readonly>
+              </mat-form-field>
+              <mat-form-field fxFlex>
+                <input matInput type="text" placeholder="諮詢單狀態" formControlName="ticketId" readonly>
+              </mat-form-field>
+            </div>
+
+            <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+              <mat-form-field fxFlex>
+                <input matInput type="text" placeholder="內容" formControlName="ticketContent" readonly>
+              </mat-form-field>
+              <!--<mat-form-field fxFlex>
+                  <input matInput type="text" placeholder="狀態" formControlName="ticketStatusName">
+                </mat-form-field>-->
+              <mat-form-field fxFlex>
+                <mat-select formControlName="ticketStatus" required>
+                  <mat-option *ngFor="let Status of changeStatusList" [value]="Status.ticketStatus">
+                    {{ Status.ticketStatusName }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+              <mat-form-field fxFlex>
+                <input matInput type="text" placeholder="申請人姓名" formControlName="applyName" readonly>
+              </mat-form-field>
+              <mat-form-field fxFlex>
+                <input matInput type="text" placeholder="申請人手機" formControlName="applyMobile" readonly>
+              </mat-form-field>
+              <mat-form-field fxFlex>
+                <input matInput type="text" placeholder="申請人地址" formControlName="applyAddress" readonly>
+              </mat-form-field>
+            </div>
+
+            <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+              <mat-form-field fxFlex>
+                <input matInput type="text" placeholder="創建日期" formControlName="createDate" readonly>
+              </mat-form-field>
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="end center">
+            <button id="submitButtom" color="primary" mat-raised-button style="margin-left: 8px;" type="submit"
+              (click)="onSubmit()" [disabled]="!this.form1.valid">儲存</button>
+          </div>
+        </form>
+      </fieldset>
+    </mat-dialog-content>
+  </div>
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

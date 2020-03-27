@@ -1,0 +1,86 @@
+<fury-page-layout mode="simple">
+  <fury-page-layout-header>
+    <fury-breadcrumbs [@fadeInRight] current="Components"></fury-breadcrumbs>
+  </fury-page-layout-header>
+
+  <fury-page-layout-content fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
+    <fury-scrollbar [@fadeInRightStagger]
+                    [fxFlex]="menuWidth"
+                    class="sticky-list"
+                    fxHide
+                    fxLayout="column"
+                    fxShow.gt-sm>
+      <mat-list class="navigation" fxFlex="grow">
+        <h3 fadeInRightStaggerElement matSubheader>Components</h3>
+        <mat-list-item (click)="scrollTo('autocomplete')" fadeInRightStaggerElement matRipple>
+          <h4 matLine>Autocomplete</h4>
+        </mat-list-item>
+        <mat-list-item (click)="scrollTo('buttons')" fadeInRightStaggerElement matRipple>
+          <h4 matLine>Buttons</h4>
+        </mat-list-item>
+        <mat-list-item (click)="scrollTo('cards')" fadeInRightStaggerElement matRipple>
+          <h4 matLine>Cards</h4>
+        </mat-list-item>
+        <mat-list-item (click)="scrollTo('checkbox')" fadeInRightStaggerElement matRipple>
+          <h4 matLine>Checkbox</h4>
+        </mat-list-item>
+        <mat-list-item (click)="scrollTo('dialogs')" fadeInRightStaggerElement matRipple>
+          <h4 matLine>Dialog</h4>
+        </mat-list-item>
+        <mat-list-item (click)="scrollTo('gridList')" fadeInRightStaggerElement matRipple>
+          <h4 matLine>Grid List</h4>
+        </mat-list-item>
+        <mat-list-item (click)="scrollTo('input')" fadeInRightStaggerElement matRipple>
+          <h4 matLine>Input</h4>
+        </mat-list-item>
+        <mat-list-item (click)="scrollTo('lists')" fadeInRightStaggerElement matRipple>
+          <h4 matLine>List</h4>
+        </mat-list-item>
+        <mat-list-item (click)="scrollTo('menu')" fadeInRightStaggerElement matRipple>
+          <h4 matLine>Menu</h4>
+        </mat-list-item>
+        <mat-list-item (click)="scrollTo('progress')" fadeInRightStaggerElement matRipple>
+          <h4 matLine>Progress</h4>
+        </mat-list-item>
+        <mat-list-item (click)="scrollTo('progressSpinner')" fadeInRightStaggerElement matRipple>
+          <h4 matLine>Progress Spinner</h4>
+        </mat-list-item>
+        <mat-list-item (click)="scrollTo('radio')" fadeInRightStaggerElement matRipple>
+          <h4 matLine>Radio</h4>
+        </mat-list-item>
+        <mat-list-item (click)="scrollTo('slider')" fadeInRightStaggerElement matRipple>
+          <h4 matLine>Slider</h4>
+        </mat-list-item>
+        <mat-list-item (click)="scrollTo('slideToggle')" fadeInRightStaggerElement matRipple>
+          <h4 matLine>Slide Toggle</h4>
+        </mat-list-item>
+        <mat-list-item (click)="scrollTo('snackBar')" fadeInRightStaggerElement matRipple>
+          <h4 matLine>Snack Bar</h4>
+        </mat-list-item>
+        <mat-list-item (click)="scrollTo('tooltip')" fadeInRightStaggerElement matRipple>
+          <h4 matLine>Tooltip</h4>
+        </mat-list-item>
+      </mat-list>
+    </fury-scrollbar>
+
+    <div [@fadeInUpStagger] class="content" fxLayout="column" fxLayoutGap="24px">
+      <fury-autocomplete fadeInUpStaggerElement></fury-autocomplete>
+      <fury-buttons fadeInUpStaggerElement></fury-buttons>
+      <fury-cards fadeInUpStaggerElement></fury-cards>
+      <fury-checkbox fadeInUpStaggerElement></fury-checkbox>
+      <fury-dialogs fadeInUpStaggerElement></fury-dialogs>
+      <fury-grid-list fadeInUpStaggerElement></fury-grid-list>
+      <fury-input fadeInUpStaggerElement></fury-input>
+      <fury-lists fadeInUpStaggerElement></fury-lists>
+      <fury-menu fadeInUpStaggerElement></fury-menu>
+      <fury-progress fadeInUpStaggerElement></fury-progress>
+      <fury-progress-spinner fadeInUpStaggerElement></fury-progress-spinner>
+      <fury-radio fadeInUpStaggerElement></fury-radio>
+      <fury-slider fadeInUpStaggerElement></fury-slider>
+      <fury-slide-toggle fadeInUpStaggerElement></fury-slide-toggle>
+      <fury-snack-bar fadeInUpStaggerElement></fury-snack-bar>
+      <fury-tooltip fadeInUpStaggerElement></fury-tooltip>
+    </div>
+  </fury-page-layout-content>
+</fury-page-layout>
+

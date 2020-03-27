@@ -1,0 +1,15 @@
+mat-card {
+  padding: 0px;
+}
+
+@media screen and (max-width:959px) {
+  mat-card {
+    min-width: 100vw !important;
+  }
+}
+
+@media screen and (min-width:959px) {
+  mat-card {
+    min-width: 74vw !important;
+  }
+}

@@ -1,0 +1,31 @@
+@import "../../../styles/_var.scss";
+.activityquery {
+  padding: $spacing;
+}
+
+.actions {
+  .create {
+    margin-left: $spacing;
+  }
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+mat-cell {
+  display: flex !important;
+  justify-content: center !important;
+  text-align: center;
+}
+
+mat-header-cell {
+  display: flex;
+  justify-content: center;
+}
+
+mat-dialog-content {
+  height: auto;
+  max-height: 150%;
+  overflow: auto;
+}

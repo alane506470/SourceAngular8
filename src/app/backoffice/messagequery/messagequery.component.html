@@ -1,0 +1,99 @@
+<div class="messagequery" furyPage furyPagePadding furyScrollbar>
+  <div class="demo-preview" fxLayout="row" fxLayoutAlign="center center">
+    <mat-card fxFlex="100%">
+      <mat-card-content fxLayout="column">
+        <form [formGroup]="form1">
+          <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="8px">
+
+            <mat-form-field fxFlex>
+              <mat-select formControlName="msgType" placeholder="訊息類別" required>
+                <!-- <mat-option *ngFor="let giftyype of msgTypeList" [value]="giftyype.codeNo" (click)="msgTypeClick()">{{giftyype.codeNo}} -- {{ giftyype.codeExplain }}</mat-option> -->
+                <mat-option *ngFor="let giftyype of msgTypeList" [value]="giftyype.codeNo">{{giftyype.codeNo}} -- {{ giftyype.codeExplain }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="form1.get('msgType').hasError('required')">「訊息類別」為必填欄位</mat-error>
+            </mat-form-field>
+
+            <mat-form-field fxFlex hintLabel="最多輸入20個字">
+              <input matInput type="text" placeholder="訊息主題" formControlName="msgSub" maxlength=20>
+              <mat-hint align="end">{{ form1.get('msgSub').value?.length }}/20</mat-hint>
+            </mat-form-field>
+
+
+            <!-- <mat-form-field fxFlex>
+              <mat-select formControlName="msgSub" placeholder="訊息主題" required>
+                <mat-option *ngFor="let giftyype of msgSubList" [value]="giftyype.msgSub">{{ giftyype.msgSub }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="form1.get('msgSub').hasError('required')">「訊息主題」為必填欄位</mat-error>
+            </mat-form-field> -->
+          </div>
+          <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="8px">
+            <mat-form-field fxFlex hintLabel="最多輸入20個字">
+              <input matInput type="text" placeholder="折價券活動代碼" formControlName="grno" maxlength=20>
+              <mat-hint align="end">{{ form1.get('grno').value?.length }}/20</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field fxFlex hintLabel="最多輸入12個字">
+              <input matInput type="text" placeholder="紅利點數活動代碼" formControlName="marketId" maxlength=12>
+              <mat-hint align="end">{{ form1.get('marketId').value?.length }}/12</mat-hint>
+            </mat-form-field>
+          </div>
+          <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+            <mat-label fxLayoutAlign="end center">
+              <!-- <input name="name" matInput placeholder="發送日期區間"> -->
+              發送開始日期區間 ：
+            </mat-label>
+
+            <mat-form-field fxFlex>
+              <input type="text" matInput placeholder="起" [matDatepicker]="m1" formControlName="msgStartDate" readonly>
+              <mat-datepicker-toggle [for]="m1" matSuffix></mat-datepicker-toggle>
+              <mat-datepicker #m1 touchUi="true"></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field fxFlex>
+              <input type="text" matInput placeholder="迄" [matDatepicker]="m2" formControlName="msgEndDate" readonly>
+              <mat-datepicker-toggle [for]="m2" matSuffix></mat-datepicker-toggle>
+              <mat-datepicker #m2 touchUi="true"></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+            <div fxLayoutAlign="start center">適用通路*：
+              <mat-radio-group fxLayout="row" fxLayoutGap="16px" formControlName="channelId" required>
+                <mat-radio-button *ngFor="let data of getChannelId" [value]="data.codeNo">{{ data.codeExplain }}</mat-radio-button>
+              </mat-radio-group>
+              <mat-error *ngIf="form1.get('channelId').hasError('required')">「適用通路」為必填欄位</mat-error>
+            </div>
+          </div>
+
+          <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="8px">
+            <mat-form-field fxFlex>
+              <mat-select formControlName="msgStatus" placeholder="訊息狀態" required>
+                <mat-option *ngFor="let msgStatus of getMsgStatus" [value]="msgStatus.codeNo">{{ msgStatus.codeExplain }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="form1.get('msgStatus').hasError('required')">「訊息狀態」為必填欄位</mat-error>
+            </mat-form-field>
+          </div>
+
+        </form>
+        <div fxLayout="row" fxLayoutAlign="end center">
+
+          <button [disabled]="!this.form1.valid" color="primary" mat-raised-button style="margin-left: 8px;" (click)="getMsgStock()" type="button">查詢</button>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <mat-table #table [dataSource]="dataSource">
+    <ng-container *ngFor="let column of columns">
+      <ng-container *ngIf="column.isModelProperty" [matColumnDef]="column.property">
+        <mat-header-cell *matHeaderCellDef> {{ column.name }}</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{ row[column.property] }}</mat-cell>
+      </ng-container>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: visibleColumns;" (click)="updateCustomer(row)" class="clickable"></mat-row>
+  </mat-table>
+
+  <mat-paginator class="paginator" [length]="resultsLength" [pageSize]="pageSize"></mat-paginator>
+
+</div>

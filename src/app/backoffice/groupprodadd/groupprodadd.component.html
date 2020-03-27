@@ -1,0 +1,83 @@
+<div class="groupprodadd" furyScrollbar fxLayout="row" fxLayoutAlign="center start">
+  <div class="card">
+    <mat-dialog-content class="card_dailog">
+      <mat-card fxFlex="100%" style="padding: 0;">
+        <mat-toolbar color="primary">分群商品設定</mat-toolbar>
+        <mat-card-content>
+          <fieldset id="fiel1">
+
+            <form [formGroup]="form1">
+              <div fxLayout="column" style="padding: 16px; ">
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <div fxLayoutAlign="start center">適用通路*：
+                    <mat-radio-group fxLayout="row" fxLayoutGap="16px" formControlName="channelId" required>
+                      <mat-radio-button *ngFor="let data of getChannelId" [value]="data.codeNo">{{ data.codeExplain }}</mat-radio-button>
+                    </mat-radio-group>
+                    <mat-error *ngIf="form1.get('channelId').hasError('required')">「適用通路」為必填欄位</mat-error>
+                  </div>
+                </div>
+                <br>
+
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <label for="singleFile">上傳資料 ：</label>
+                  <input id="singleFile" type="file" ng2FileSelect [uploader]="uploaderCSV" (change)="handleFileInput($event.target.files, $event);$event.target.value='';">
+                </div>
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <table *ngIf="uploaderCSV.queue.length>0" style="text-align:center;" border="1">
+                    <thead>
+                      <tr>
+                        <th class="classtr">本機檔案名稱</th>
+                        <th class="classtr">檔案大小</th>
+                        <th class="classtr">上傳進度</th>
+                        <th class="classtr">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of uploaderCSV.queue">
+                        <td>
+                          <strong>{{ item?.file?.name }}</strong>
+                        </td>
+                        <td *ngIf="uploaderCSV" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                        <td>{{uploaderCSV.progress}}%</td>
+                        <td>
+                          <button mat-raised-button mat-icon-button color="warn" matTooltip="移除" [disabled]="!(uploaderCSV.queue.length)"
+                            (click)="removeUploadFile();">
+                            <mat-icon>remove</mat-icon>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <br>
+
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <mat-form-field fxFlex>
+                    <input type="text" matInput placeholder="生效起日*：" [matDatepicker]="m1" [min]="isUpdateMode() ? null:datePickerMinDate"
+                      [max]="isUpdateMode() ? null:datePickerMaxDate" formControlName="startDate" readonly>
+                    <mat-datepicker-toggle [for]="m1" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #m1 touchUi="true"></mat-datepicker>
+                  </mat-form-field>
+
+                  <mat-form-field fxFlex>
+                    <input type="text" matInput placeholder="生效迄日*：" [matDatepicker]="m2" [min]="isUpdateMode() ? null:datePickerMinDate"
+                      [max]="isUpdateMode() ? null:datePickerMaxDate" formControlName="endDate" readonly>
+                    <mat-datepicker-toggle [for]="m2" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #m2 touchUi="true"></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+              </div>
+              <div fxLayout="row" fxLayoutAlign="end center">
+                <button mat-raised-button type="button" style="margin-left: 8px;" (click)="reset()">重設</button>
+                <button id="submitButtom" color="primary" mat-raised-button style="margin-left: 8px;" [disabled]="!(this.form1.valid && this.fileupFlag)"
+                  type="submit" (click)="fileUploadSubmit()">儲存</button>
+              </div>
+            </form>
+          </fieldset>
+        </mat-card-content>
+      </mat-card>
+    </mat-dialog-content>
+  </div>
+</div>
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

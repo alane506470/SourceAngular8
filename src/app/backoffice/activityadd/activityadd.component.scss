@@ -1,0 +1,110 @@
+@import "var";
+[furyScrollbar] > ::ng-deep .scroll-content {
+  max-width: 100%;
+}
+
+@media screen and (max-width:959px) {
+  mat-card {
+    min-width: 100vw !important;
+  }
+}
+
+@media screen and (min-width:959px) {
+  mat-card {
+    min-width: 74vw !important;
+  }
+}
+
+.activityadd {
+  //background: url('/assets/img/backgrounds/form-wizard.jpg');
+  background-size: cover;
+
+}
+
+
+.table {
+  text-align:center;
+   border:"1"
+}
+
+
+.card {
+  width:auto;
+  height:auto;
+  // max-height:150%;
+  // overflow:auto;
+}
+
+
+h1 {
+  color: white;
+  text-shadow: 0 0 10px black;
+  margin-top: $spacing*3;
+}
+
+
+
+.list-container {
+  width: 600px;
+
+  mat-list-item {
+    background: white;
+    border-style:outset;
+    height:auto;
+  }
+  mat-toolbar{
+    width: 600px;
+  }
+
+  mat-list {
+    padding-top: 0;
+    max-width: 100%;
+  }
+}
+
+mat-icon.left-right-compare {
+  text-shadow: 0px 0px 20px #444;
+  font-size: 60px;
+  width: 60px;
+  height: 60px;
+  color: white;
+}
+
+.small-list-item {
+  padding-left: 6px;
+  padding-right: 16px;
+}
+
+.draggable {
+  cursor: move;
+  cursor: -webkit-grabbing;
+  width: 600px;
+}
+
+.drag-handle {
+  cursor: move;
+  cursor: -webkit-grabbing;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.sortable-ghost {
+  opacity: .5;
+}
+.mat-dialog-content {
+  height:auto;
+  max-height:150%;
+  overflow:auto;  
+}
+.title{
+  // max-width: 500px  !important;
+  color: blue;
+  // width: 400px;
+  // word-break:break-all  !important;
+  // word-wrap:break-word  !important;
+  word-break:normal; width:auto; display:block; white-space:pre-wrap;word-wrap : break-word ;overflow: hidden ;
+}
+
+.classtr{
+  height:auto;width:auto;vertical-align:middle;
+}

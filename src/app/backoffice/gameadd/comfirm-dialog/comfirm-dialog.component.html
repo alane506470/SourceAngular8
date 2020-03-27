@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>
+    確認視窗
+  </h2>
+  
+  <mat-dialog-content>
+    {{message}}
+  </mat-dialog-content>
+  
+  <mat-dialog-actions *ngIf="type==='1'">
+    <button mat-raised-button color="primary" (click)="confirm()">確認</button>
+    <button mat-raised-button mat-dialog-close color="warn">取消</button>
+  </mat-dialog-actions>
+  
+  <mat-dialog-actions *ngIf="type==='2'">
+    <button mat-raised-button color="primary" (click)="confirm2()">導轉</button>
+    <button mat-raised-button mat-dialog-close color="warn">停留此頁</button>
+  </mat-dialog-actions>
+
+  <mat-dialog-actions *ngIf="type==='3'">
+    <button mat-raised-button color="primary" (click)="confirm3()">確認</button>
+    <button mat-raised-button mat-dialog-close color="warn">取消</button>
+  </mat-dialog-actions>

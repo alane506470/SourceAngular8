@@ -1,0 +1,55 @@
+<div class="activityadd" fxLayout="row" fxLayoutAlign="center start" furyPage furyPagePadding furyScrollbar>
+    <mat-dialog-content>
+      <mat-toolbar color="primary">社區資料</mat-toolbar>
+      <fieldset>
+        <mat-tab-group>
+          <mat-tab color="primary" label="住戶資料">
+            <mat-table #table [dataSource]="dataSource">
+              <ng-container *ngFor="let column of columns">
+                <ng-container *ngIf="column.isModelProperty" [matColumnDef]="column.property">
+                  <mat-header-cell *matHeaderCellDef> {{ column.name }}</mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{ row[column.property] }}</mat-cell>
+                </ng-container>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: visibleColumns;" class="clickable"></mat-row>
+            </mat-table>
+            <mat-paginator #memberpaginator [length]="resultsLength" [pageIndex]="0" [pageSize]="10"></mat-paginator>
+            <div fxLayout="row" fxLayoutAlign="end center">
+              <button id="submitButtom" color="primary" mat-raised-button style="margin-left: 8px;"
+                [disabled]='dataSource.data.length === 0' type="submit" (click)="onSubmit()">匯出</button>
+
+            </div>
+          </mat-tab>
+
+          <mat-tab color="primary" label="管理員資料">
+            <mat-table #table [dataSource]="ManagerdataSource">
+              <ng-container *ngFor="let column of columns1">
+                <ng-container *ngIf="column.isModelProperty" [matColumnDef]="column.property">
+                  <mat-header-cell *matHeaderCellDef> {{ column.name }}</mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{ row[column.property] }}</mat-cell>
+                </ng-container>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="visibleColumns1"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: visibleColumns1;" class="clickable"></mat-row>
+            </mat-table>
+            <mat-paginator #managerpaginator [length]="ManageResultsLength" [pageIndex]="0" [pageSize]="10">
+            </mat-paginator>
+            <div fxLayout="row" fxLayoutAlign="end center">
+              <button id="submitButtom" color="primary" mat-raised-button style="margin-left: 8px;"
+                [disabled]='ManagerdataSource.data.length === 0' type="submit" (click)="onSubmit2()">匯出</button>
+            </div>
+          </mat-tab>
+
+          <mat-tab color="primary" label="住戶qrcode">
+            <a [href]="'/householdQrcode/?commId='+ commId" color="primary" style="margin-left: auto;
+                          margin-right: auto;" [hidden]='dataSource.data.length === 0' target="_blank">瀏覽社區住戶Qrcode</a>
+          </mat-tab>
+
+        </mat-tab-group>
+      </fieldset>
+    </mat-dialog-content>
+  </div>
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

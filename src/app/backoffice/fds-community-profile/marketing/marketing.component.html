@@ -1,0 +1,25 @@
+<form [formGroup]="form7">
+  <div fxLayout="column" style="padding: 16px; ">
+
+      <mat-form-field fxFlex>
+        <mat-select formControlName="marketType" placeholder="行銷方式" multiple>
+          <mat-option *ngFor="let data of getMarket_type$ | async" [value]="data.code">{{data.name}}</mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <mat-select formControlName="dmMethod" placeholder="DM投遞" multiple>
+          <mat-option *ngFor="let data of getDM_method$ | async" [value]="data.code">{{data.name}}
+          </mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+      </mat-form-field>
+
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
+      <button color="warn" mat-raised-button type="button" (click)="reset(this.form7)">重設</button>
+      <button mat-raised-button type="button" [disabled]="this.form7.invalid" (click)="saveForm()">儲存</button>
+      <ng-content select="button"></ng-content>
+    </div>
+  </div>
+</form>

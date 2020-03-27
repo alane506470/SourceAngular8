@@ -1,0 +1,47 @@
+<form [formGroup]="form4">
+  <div fxLayout="column" style="padding: 16px; ">
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <mat-select formControlName="gasType" placeholder="瓦斯類型">
+          <mat-option *ngFor="let data of getGasType$ | async" [value]="data.code">{{data.name}}</mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <mat-select formControlName="voltage" placeholder="燈具電壓">
+          <mat-option *ngFor="let data of getVoltage$ | async" [value]="data.code">{{data.name}}
+          </mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+      </mat-form-field>
+    </div>
+
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <mat-select formControlName="cpipeType" placeholder="熱水管材質">
+          <mat-option *ngFor="let data of getCpipeType$ | async" [value]="data.code">{{data.name}}</mat-option>
+        </mat-select>
+
+
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <mat-select formControlName="hpipeType" placeholder="冷水管材質">
+          <mat-option *ngFor="let data of getHpipeType$ | async" [value]="data.code">{{data.name}}
+          </mat-option>
+        </mat-select>
+
+      </mat-form-field>
+    </div>
+
+    <div>
+        <ng-content select="mat-form-field"></ng-content>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
+      <button color="warn" mat-raised-button type="button" (click)="reset(this.form4)">重設</button>
+      <button mat-raised-button type="button" [disabled]="this.form4.invalid" (click)="saveForm()">儲存</button>
+      <ng-content select="button"></ng-content>
+    </div>
+  </div>
+</form>

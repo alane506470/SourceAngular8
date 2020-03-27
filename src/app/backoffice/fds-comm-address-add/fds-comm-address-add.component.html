@@ -1,0 +1,59 @@
+<div class="card" furyPagePadding furyScrollbar furyPage>
+  <mat-dialog-content class="card_dailog">
+    <mat-card>
+      <mat-toolbar color="primary">新增社區資料</mat-toolbar>
+      <mat-card-content class="card_content" fxLayout="column">
+        <mat-tab-group [(selectedIndex)]="selectedIndex">
+          <mat-tab color="primary" label="社區資料">
+            <form [formGroup]="form1">
+              <div fxLayout="column" style="padding: 16px; ">
+                <div fxLayoutGap="8px">
+                  <mat-form-field fxFlex>
+                    <input formControlName="comm_name" matInput type="text" placeholder="社區名稱">
+                    <mat-error *ngIf="form1.get('comm_name').hasError('maxlength')">「社區名稱」不可超過40個字</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field fxFlex>
+                    <input formControlName="comm_id" matInput type="text" placeholder="社區代碼" readonly>
+                  </mat-form-field>
+                </div>
+
+
+                <div fxLayoutGap="8px">
+                  <mat-form-field fxFlex>
+                    <mat-select formControlName="comm_add1" placeholder="社區所在縣市" readonly>
+                      <mat-option *ngFor="let data of getCountyId" [value]="data.code">{{data.name}}</mat-option>
+                    </mat-select>
+                    <!-- <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+
+                  </mat-form-field>
+                  <mat-form-field fxFlex>
+                    <mat-select formControlName="comm_add2" placeholder="社區所在鄉鎮市區" readonly>
+                      <mat-option *ngFor="let data of getTownshipId" [value]="data.code">{{data.name}}
+                      </mat-option>
+                    </mat-select>
+                    <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+                  </mat-form-field>
+                </div>
+
+                <div fxLayoutGap="8px">
+                  <mat-form-field fxFlex>
+                    <input formControlName="comm_add3" matInput type="text" placeholder="社區代表地址">
+                    <mat-error *ngIf="form1.get('comm_add3').hasError('maxlength')">「社區代表地址」不可超過200個字</mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
+                    <button color="warn" mat-raised-button type="button" (click)="reset(this.form1)">重設</button>
+                    <button mat-raised-button type="button" [disabled]="this.form1.invalid" (click)="saveForm()">儲存</button>
+                  </div>
+
+              </div>
+            </form>
+
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </mat-dialog-content>
+</div>

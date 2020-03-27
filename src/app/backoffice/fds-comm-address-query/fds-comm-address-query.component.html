@@ -1,0 +1,41 @@
+<div class="card" furyPagePadding furyScrollbar furyPage>
+  <mat-card fxFlex="100%">
+    <mat-card-content fxLayout="column">
+      <form [formGroup]="form1">
+        <div fxLayoutGap="8px">
+          <mat-form-field fxFlex>
+            <input formControlName="comm_name" matInput type="text" placeholder="社區名稱">
+            <mat-error *ngIf="form1.get('comm_name').hasError('maxlength')">「社區名稱」不可超過40個字</mat-error>
+          </mat-form-field>
+        </div>
+      </form>
+      <div fxLayout="row" fxLayoutAlign="end center">
+        <button color="primary" mat-raised-button style="margin-left: 8px;" type="button"
+          [disabled]="this.form1.invalid">查詢</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<mat-table #table [dataSource]="dataSource">
+  <ng-container *ngFor="let column of columns">
+    <ng-container *ngIf="column.isModelProperty" [matColumnDef]="column.property">
+      <mat-header-cell *matHeaderCellDef> {{ column.name }}</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{ row[column.property] }}</mat-cell>
+    </ng-container>
+  </ng-container>
+
+  <ng-container matColumnDef="management">
+    <mat-header-cell *matHeaderCellDef>
+      編輯社區主檔
+    </mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      <button mat-icon-button mat-icon-button matTooltip="預覽" color="primary">
+        <mat-icon>touch_app</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: visibleColumns;" class="clickable"></mat-row>
+</mat-table>
+<mat-paginator [length]="resultsLength" [pageIndex]="0" [pageSize]="10"></mat-paginator>

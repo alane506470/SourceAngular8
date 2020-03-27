@@ -1,0 +1,27 @@
+@import "../../../styles/_var.scss";
+.bonusquery {
+    padding: $spacing;
+}
+
+.actions {
+    .create {
+        margin-left: $spacing;
+    }
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+
+mat-cell{
+    display:flex !important;
+    justify-content:center!important;
+    
+  }
+  
+  mat-header-cell {
+    display:flex;
+    justify-content:center;
+  }
+  

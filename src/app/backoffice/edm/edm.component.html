@@ -1,0 +1,90 @@
+<div class="all-in-one-table" furyPage furyPagePadding furyScrollbar>
+  <div class="demo-preview" fxLayout="row" fxLayoutAlign="center center">
+    <mat-card fxFlex="100%">
+      <mat-card-content fxLayout="column">
+        <form [formGroup]="form1">
+          <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="8px">
+
+            <mat-form-field fxFlex hintLabel="最多輸入20個字">
+              <input matInput formControlName="grno" type="text" placeholder="折價券活動代碼" maxlength="20">
+              <mat-hint align="end">{{ form1.get('grno').value?.length }}/20</mat-hint>
+             </mat-form-field>
+            <mat-form-field fxFlex hintLabel="最多輸入200個字">
+              <input matInput formControlName="name" type="text" placeholder="折價券活動名稱" maxlength="200">
+              <mat-hint align="end">{{ form1.get('name').value?.length }}/200</mat-hint>
+            </mat-form-field>
+
+          </div>
+          <br>
+          <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+            <div fxLayoutAlign="start center">適用通路：
+              <mat-radio-group fxLayout="row" fxLayoutGap="16px" formControlName="channelId" required>
+                <mat-radio-button *ngFor="let data of getChannelId" [value]="data.codeNo">{{ data.codeExplain }}</mat-radio-button>
+              </mat-radio-group>
+              <mat-error *ngIf="form1.get('channelId').hasError('required')">「適用通路」為必填欄位</mat-error>
+            </div>
+          </div>
+        </form>
+        <!-- <div fxLayout="column" fxLayout.gt-md="row">
+        <mat-form-field fxFlex>
+          <mat-select [(ngModel)]="select1" placeholder="訊息類別">
+            <mat-option value="Coke">折價券</mat-option>
+            <mat-option value="Pepsi">官方訊息</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field fxFlex>
+          <input matInput placeholder="訊息主題">
+        </mat-form-field>
+        <mat-form-field fxFlex>
+          <input matInput placeholder="訊息文字">
+        </mat-form-field>
+      </div>
+      <div fxLayout="column" fxLayout.gt-md="row">
+        <mat-form-field fxFlex>
+          <input type="text" name="birthday" matInput placeholder="發送日期" [matDatepicker]="msgSendDate" />
+        </mat-form-field>
+        <mat-datepicker-toggle [for]="msgSendDate" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #msgSendDate></mat-datepicker>
+
+        <mat-form-field fxFlex>
+          <input type="text" name="msgEndDate" matInput placeholder="結束日期" [matDatepicker]="msgEndDate" />
+        </mat-form-field>
+        <mat-datepicker-toggle [for]="msgEndDate" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #msgEndDate></mat-datepicker>
+        <mat-form-field>
+          <mat-select [(ngModel)]="select1" placeholder="訊息狀態">
+            <mat-option value="Coke">已發送</mat-option>
+            <mat-option value="Pepsi">未發送</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div> -->
+        <div fxLayout="row" fxLayoutAlign="end center">
+          
+          <button color="primary" 
+          [disabled]="!this.form1.valid"
+          mat-raised-button style="margin-left: 8px;" (click)="getGiftStock()" type="button">查詢</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-table #table [dataSource]="dataSource" >
+
+    <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- fullName Column -->
+    <ng-container *ngFor="let column of columns">
+      <ng-container *ngIf="column.isModelProperty" [matColumnDef]="column.property">
+        <mat-header-cell *matHeaderCellDef > {{ column.name }}</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{ row[column.property] }}</mat-cell>
+      </ng-container>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: visibleColumns;" (click)="updateCustomer(row)" class="clickable"></mat-row>
+  </mat-table>
+
+  <mat-paginator class="paginator" [length]="resultsLength" [pageSize]="pageSize"></mat-paginator>
+
+</div>

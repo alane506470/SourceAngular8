@@ -1,0 +1,83 @@
+<div class="fds-advquery" furyPage furyPagePadding furyScrollbar>
+  <div class="demo-preview" fxLayout="row" fxLayoutAlign="center center">
+
+    <mat-card fxFlex="100%" >
+      <mat-card-content fxLayout="column">
+
+          <form [formGroup]="form1">
+              <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                <mat-form-field fxFlex >
+                  <input matInput type="text" placeholder="廣告活動名稱" required formControlName="actDesc" maxlength=60>
+                  <mat-error *ngIf="form1.get('actDesc').hasError('required')">「廣告活動名稱」為必填欄位</mat-error>
+                </mat-form-field>
+
+                <mat-form-field fxFlex>
+                  <mat-select formControlName="commId" #selectInterest placeholder="社區名稱" required>
+                    <mat-option *ngFor="let data of communityList" [value]="data.commId">{{data.commName}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+              </div>
+
+              <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="8px">
+
+                <mat-form-field fxFlex>
+                  <mat-select formControlName="cutId" #selectInterest placeholder="APP版位" required>
+                    <mat-option *ngFor="let data of appCutTypeList" [value]="data.cutId">{{data.cutDesc}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              
+              </div>
+
+                <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="8px">
+
+                    <mat-form-field fxFlex>
+                      <mat-select formControlName="actStatus" placeholder="活動狀態" required>
+                          <mat-option *ngFor="let actStatus of getActStatus" [value]="actStatus.codeNo">{{ actStatus.codeExplain }}</mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="form1.get('actStatus').hasError('required')">「活動狀態」為必填欄位</mat-error>
+                    </mat-form-field>
+  
+                  </div>
+            </form>
+
+            <div fxLayout="row" fxLayoutAlign="end center">
+                <!-- <button color="primary" mat-raised-button style="margin-left: 8px;" (click)="getActStock()" type="button">查詢</button> -->
+                <button [disabled]="!(this.form1.get('commId').valid && this.form1.get('actDesc').valid && this.form1.get('cutId').valid)" color="primary" mat-raised-button style="margin-left: 8px;" (click)="getAdvStock()"
+                    type="button">查詢</button>
+              </div>
+    
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <mat-table #table [dataSource]="dataSource">
+            <ng-container *ngFor="let column of columns">
+                <ng-container *ngIf="column.isModelProperty" [matColumnDef]="column.property">
+                    <mat-header-cell *matHeaderCellDef> {{ column.name }}</mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{ row[column.property] }}</mat-cell>
+                </ng-container>
+            </ng-container>
+      
+            <ng-container matColumnDef="management">
+                <mat-header-cell *matHeaderCellDef>
+                    操作
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <button *ngIf="row.actStatus_TW !== '發佈'" mat-icon-button mat-icon-button matTooltip="正式上稿" color="primary" (click)="sendAct(row)">
+                        <mat-icon>playlist_add_check</mat-icon>
+                    </button>
+                    <button mat-icon-button mat-icon-button matTooltip="預覽" color="primary" (click)="previewAct(row);$event.stopPropagation();">
+                        <mat-icon>touch_app</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: visibleColumns;" class="clickable"></mat-row>
+           </mat-table>
+      
+           <mat-paginator class="paginator" [length]="resultsLength" [pageSize]="pageSize"></mat-paginator>
+      
+      </div>
+      <fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>
+      

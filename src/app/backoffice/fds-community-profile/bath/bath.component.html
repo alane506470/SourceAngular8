@@ -1,0 +1,122 @@
+<form [formGroup]="form6">
+  <div fxLayout="column" style="padding: 16px; ">
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <mat-select formControlName="bathType" placeholder="浴室" multiple>
+          <mat-option *ngFor="let data of getbath_type$ | async" [value]="data.code">{{data.name}}</mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <mat-select formControlName="bathWall" placeholder="浴室隔間牆">
+          <mat-option *ngFor="let data of getbath_wall$ | async" [value]="data.code">{{data.name}}
+          </mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+      </mat-form-field>
+    </div>
+
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <mat-select formControlName="toiletPipe" placeholder="馬桶管距">
+          <mat-option *ngFor="let data of gettoilet_pipe$ |async" [value]="data.code">{{data.name}}</mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <mat-select formControlName="bathBrand" placeholder="衛浴品牌">
+          <mat-option *ngFor="let data of getbath_brand$ | async" [value]="data.code">{{data.name}}
+          </mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+      </mat-form-field>
+    </div>
+
+    <div fxLayoutGap="8px">
+        <mat-form-field fxFlex>
+          <mat-select formControlName="plug" placeholder="馬桶旁是否有插座" multiple>
+            <mat-option *ngFor="let data of gettoilet_washlet$ | async" [value]="data.code">{{data.name}}</mat-option>
+          </mat-select>
+          <!-- <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+
+        </mat-form-field>
+        <mat-form-field fxFlex>
+          <mat-select formControlName="toiletShape" placeholder="馬桶形狀">
+            <mat-option *ngFor="let data of gettoilet_s$ | async" [value]="data.code">{{data.name}}
+            </mat-option>
+          </mat-select>
+          <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+        </mat-form-field>
+      </div>
+
+      <div fxLayoutGap="8px">
+          <mat-form-field fxFlex>
+            <mat-select formControlName="washlet" placeholder="免治便座是否為標配" multiple>
+              <mat-option *ngFor="let data of getwashlet$ | async" [value]="data.code">{{data.name}}</mat-option>
+            </mat-select>
+            <!-- <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+
+          </mat-form-field>
+          <mat-form-field fxFlex>
+            <mat-select formControlName="kitchen" placeholder="廚具型式">
+              <mat-option *ngFor="let data of getkitchen$ | async" [value]="data.code">{{data.name}}
+              </mat-option>
+            </mat-select>
+            <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+          </mat-form-field>
+        </div>
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <mat-select formControlName="sinkIn" placeholder="廚房水槽(給水)">
+          <mat-option *ngFor="let data of getsink_in$ | async" [value]="data.code">{{data.name}}</mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <mat-select formControlName="sinkOut" placeholder="廚房水槽(排水)">
+          <mat-option *ngFor="let data of getsink_out$ | async" [value]="data.code">{{data.name}}
+          </mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+      </mat-form-field>
+    </div>
+
+    <div fxLayoutGap="8px">
+        <mat-form-field fxFlex>
+            <mat-select formControlName="balcony" placeholder="是否有陽台">
+              <mat-option *ngFor="let data of getbalcony$ |async" [value]="data.code">{{data.name}}</mat-option>
+            </mat-select>
+            <!-- <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+
+          </mat-form-field>
+
+      <mat-form-field fxFlex>
+        <mat-select formControlName="balconyW" placeholder="陽台寬度">
+          <mat-option *ngFor="let data of getbalcony_w$ |async" [value]="data.code">{{data.name}}</mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+
+      </mat-form-field>
+    </div>
+
+      <mat-form-field fxFlex>
+          <mat-select formControlName="hanger" placeholder="曬衣架是否為標配">
+            <mat-option *ngFor="let data of gethanger$ | async" [value]="data.code">{{data.name}}</mat-option>
+          </mat-select>
+          <!-- <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+
+        </mat-form-field>
+    <div>
+        <ng-content select="mat-form-field"></ng-content>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
+        <button color="warn" mat-raised-button type="button" (click)="reset(this.form6)">重設</button>
+        <button mat-raised-button type="button" [disabled]="this.form6.invalid" (click)="saveForm()">儲存</button>
+        <ng-content select="button"></ng-content>
+      </div>
+  </div>
+</form>

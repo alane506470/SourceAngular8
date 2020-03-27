@@ -1,0 +1,175 @@
+<div class="pushadd" furyScrollbar fxLayout="row" fxLayoutAlign="center start">
+    <mat-dialog-content class="card_dailog">
+      <mat-card fxFlex="100%" style="padding: 0;">
+        <mat-toolbar color="primary">推播設定功能</mat-toolbar>
+        <mat-card-content>
+          <fieldset id="fiel1">
+            <mat-tab-group [selectedIndex]="selectedIndex">
+              <mat-tab color="primary" label="推播設定">
+                <form [formGroup]="form1">
+                  <div fxLayout="column" style="padding: 16px; ">
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                      <mat-form-field fxFlex>
+                        <input matInput type="text" placeholder="推播編號" formControlName="pushId" readonly>
+                      </mat-form-field>
+                      <mat-form-field fxFlex>
+                        <input matInput type="text" placeholder="訊息編號" formControlName="msgId" (change)="msgIdVaild()">
+                      </mat-form-field>
+                      <mat-form-field fxFlex hintLabel="最多輸入10個字">
+                        <input matInput type="text" placeholder="活動編號" formControlName="actId" maxlength=10 (change)="actIdValid()">
+                        <mat-hint align="end">{{ form1.get('actId').value?.length }}/10</mat-hint>
+                      </mat-form-field>
+                    </div>
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                      <mat-form-field fxFlex>
+                        <input matInput type="text" placeholder="折價券代碼" formControlName="grno">
+                        <!-- <input matInput type="text" placeholder="折價券活動代碼" formControlName="grno" (change)="idValid()"> -->
+                      </mat-form-field>
+                      <mat-form-field fxFlex>
+                        <input matInput type="text" placeholder="紅利點數代碼" formControlName="marketId">
+                        <!-- <input matInput type="text" placeholder="紅利點數活動代碼" formControlName="marketId" (change)="idValid()"> -->
+                      </mat-form-field>
+                      <!-- <mat-form-field fxFlex>
+                        <input matInput type="text" placeholder="適用通路" formControlName="channelId" readonly>
+                      </mat-form-field> -->
+                      <div fxLayoutAlign="start center">適用通路*：
+                        <mat-radio-group fxLayout="row" fxLayoutGap="16px" formControlName="channelId" required>
+                          <mat-radio-button *ngFor="let data of getChannelId" [value]="data.codeNo">{{ data.codeExplain }}</mat-radio-button>
+                        </mat-radio-group>
+                        <mat-error *ngIf="form1.get('channelId').hasError('required')">「適用通路」為必填欄位</mat-error>
+
+                      </div>
+
+                    </div>
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                      <mat-form-field fxFlex hintLabel="最多輸入20個字">
+                        <input matInput type="text" placeholder="推播主題" formControlName="pushSub" required maxlength=20>
+                        <mat-error *ngIf="form1.get('pushSub').hasError('required')">「推播主題」為必填欄位</mat-error>
+                        <mat-hint align="end">{{ form1.get('pushSub').value?.length }}/20</mat-hint>
+                      </mat-form-field>
+                    </div>
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                      <mat-form-field fxFlex hintLabel="最多輸入40個字">
+                        <input matInput type="text" placeholder="推播文字" formControlName="pushText" required maxlength=40>
+                        <mat-error *ngIf="form1.get('pushText').hasError('required')">「推播文字」為必填欄位</mat-error>
+                        <mat-hint align="end">{{ form1.get('pushText').value?.length }}/40</mat-hint>
+                      </mat-form-field>
+                    </div>
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                        <mat-form-field fxFlex>
+                            <input [min]="isUpdateMode() ? null:datePickerMinDate" [max]="isUpdateMode() ? null:datePickerMaxDate" [owlDateTime]="dt2" placeholder="發送日期" matInput formControlName="pushSendDate"
+                              required readonly>
+                            <owl-date-time #dt2></owl-date-time>
+                            <mat-error *ngIf="form1.get('pushSendDate').hasError('required')">「發送日期」為必填欄位</mat-error>
+                          </mat-form-field>
+                          <span fxLayoutAlign="end center" [owlDateTimeTrigger]="dt2">
+                            <!-- <i class="fa fa-calendar"></i> -->
+                            <svg  class="mat-datepicker-toggle-default-icon ng-star-inserted" fill="currentColor" focusable="false" height="24px" viewBox="0 0 24 24" width="24px"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"></path></svg>
+                          </span>
+                          <mat-form-field fxFlex>
+                              <input [min]="isUpdateMode() ? null:datePickerMinDate" [max]="isUpdateMode() ? null:datePickerMaxDate" [owlDateTime]="dt3" placeholder="結束日期" matInput formControlName="pushEndDate"
+                                required readonly>
+                              <owl-date-time #dt3></owl-date-time>
+                              <mat-error *ngIf="form1.get('pushEndDate').hasError('required')">「結束日期」為必填欄位</mat-error>
+
+                            </mat-form-field>
+                            <span fxLayoutAlign="end center" [owlDateTimeTrigger]="dt3">
+                              <!-- <i class="fa fa-calendar"></i> -->
+                              <svg  class="mat-datepicker-toggle-default-icon ng-star-inserted" fill="currentColor" focusable="false" height="24px" viewBox="0 0 24 24" width="24px"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"></path></svg>
+                            </span>
+                             <!-- 21955 訊息起迄日要細至時分 -->
+                      <!-- <mat-form-field fxFlex>
+                        <input type="text" matInput placeholder="發送日期" [matDatepicker]="msgStartDate" [min]="datePickerMinDate" [max]="datePickerMaxDate"
+                          formControlName="pushSendDate" required readonly>
+                        <mat-datepicker-toggle [for]="msgStartDate" matSuffix></mat-datepicker-toggle>
+                        <mat-datepicker #msgStartDate touchUi="true"></mat-datepicker>
+                        <mat-error *ngIf="form1.get('pushSendDate').hasError('required')">「發送日期」為必填欄位</mat-error>
+                      </mat-form-field>
+                      <mat-form-field fxFlex>
+                        <input type="text" matInput placeholder="結束日期" required [matDatepicker]="msgEndDate" [min]="datePickerMinDate" [max]="datePickerMaxDate"
+                          formControlName="pushEndDate" readonly>
+                        <mat-datepicker-toggle [for]="msgEndDate" matSuffix></mat-datepicker-toggle>
+                        <mat-datepicker #msgEndDate touchUi="true"></mat-datepicker>
+                        <mat-error *ngIf="form1.get('pushEndDate').hasError('required')">「結束日期」為必填欄位</mat-error>
+                      </mat-form-field> -->
+                    </div>
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                      <mat-form-field fxFlex>
+                        <input matInput type="text" placeholder="推播狀態" [value]="this.pushStatusValue" readonly>
+                        <input matInput type="text" placeholder="推播狀態" formControlName="pushStatus" hidden=true>
+                      </mat-form-field>
+                    </div>
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                      <div fxLayoutAlign="start center">發送對象：
+                        <mat-radio-group fxLayout="row" fxLayoutGap="16px" formControlName="applyMem" required>
+                          <mat-radio-button (change)="onchange($event)" *ngFor="let applyMem of ApplyMemList" [value]="applyMem.codeNo">{{ applyMem.codeExplain }}</mat-radio-button>
+                            </mat-radio-group>
+                          <mat-error *ngIf="form1.get('applyMem').hasError('required')">「發送對象」為必填欄位</mat-error>
+                        </div>
+                    </div>
+                  </div>
+                  <div fxLayout="row" fxLayoutAlign="end center">
+
+                    <button mat-raised-button type="button" style="margin-left: 8px;" (click)="reset()" [disabled]="this.defaults.pushStatus === 'D'? true:false">重設</button>
+                    <button color="primary" mat-raised-button style="margin-left: 8px;" [disabled]="!form1.valid" (click)="nextStep()" type="button">下一頁</button>
+
+
+                  </div>
+                </form>
+              </mat-tab>
+              <mat-tab color="primary" label="會員設定" [disabled]="!form1.valid">
+                <form [formGroup]="form2" method="post" enctype="multipart/form-data" action="api/upload">
+                  <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                    <label for="singleFile">上傳會員名單 ：</label>
+                    <input id="singleFile" type="file" ng2FileSelect [uploader]="uploader" [attr.disabled]="uploadMemberFileDisable?'':null"
+                      (change)="handleFileInput($event.target.files);$event.target.value='';" formControlName="uploadMemberFile"
+                    />
+                  </div>
+                  <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                    <table *ngIf="uploader.queue.length>0" class="table uploader-table">
+                      <thead>
+                        <tr>
+                          <th width="30%">檔案名稱</th>
+                          <th>檔案大小</th>
+                          <th>上傳進度</th>
+                          <th>資料筆數</th>
+                          <th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let item of uploader.queue">
+                          <td>
+                            <strong>{{ item?.file?.name }}</strong>
+                          </td>
+                          <td *ngIf="uploader" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                          <td>{{fileupProcess}}</td>
+                          <td>{{fileupCnt}}</td>
+                          <td>
+                            <button mat-raised-button mat-icon-button color="accent" (click)="fileUploadSubmit()" matTooltip="上傳" [disabled]="this.defaults.pushStatus === 'D'? true:!uploader.getNotUploadedItems().length">
+                              <mat-icon>cloud_upload</mat-icon>
+                            </button>
+
+                            <button mat-raised-button mat-icon-button color="warn" matTooltip="移除" [disabled]="this.defaults.pushStatus === 'D'? true:!uploader.queue.length"
+                              (click)="fileUpDelete()">
+                              <mat-icon>remove</mat-icon>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div fxLayout="row" fxLayoutAlign="end center">
+                    <button mat-raised-button type="button" (click)="previousStep()">上一頁</button>
+                    <button mat-raised-button type="button" *ngIf="isUpdateMode()" (click)="deleteClick()" style="margin-left: 8px;" [disabled]="this.defaults.pushStatus === 'D'? true:false">刪除</button>
+                    <button id="submitButtom" color="primary" mat-raised-button style="margin-left: 8px;" [disabled]="this.defaults.pushStatus === 'D'? true:!(this.form1.valid && this.fileupFlag)"
+                      type="submit" (click)="onSubmit()">儲存</button>
+                  </div>
+                </form>
+              </mat-tab>
+            </mat-tab-group>
+          </fieldset>
+        </mat-card-content>
+      </mat-card>
+    </mat-dialog-content>
+</div>
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>
+  照片視窗
+</h2>
+
+<mat-dialog-content>
+  <!-- <img *ngFor="let item of allImg" [src]="item.ticketPicLink"> -->
+  <div class="swiper-container">
+      <div class="swiper-wrapper" >
+        <div class="swiper-slide" *ngFor="let item of allImg"><img [src]="item.ticketPicLink"></div>
+      </div>
+      <!-- Add Pagination -->
+      <div class="swiper-pagination"></div>
+
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+  </div>
+</mat-dialog-content>

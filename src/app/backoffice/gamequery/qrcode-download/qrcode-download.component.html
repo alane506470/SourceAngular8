@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>
+  QRcode下載
+</h2>
+
+
+<mat-dialog-content>
+<div> <mat-radio-group required  [(ngModel)]="fileChoose">
+    <mat-radio-button value="all">全部下載</mat-radio-button>
+    &nbsp;
+    <mat-radio-button value="single">單一店點</mat-radio-button>
+  </mat-radio-group></div>
+ <br>
+<div *ngIf="fileChoose==='single'">  <mat-form-field fxFlex  >
+    <mat-select [(ngModel)]="storeId" placeholder="店點" required>
+      <mat-option *ngFor="let list of showList" [value]="list.storeId">{{list.channelName}}--{{list.storeName}}</mat-option>
+    </mat-select>
+  </mat-form-field></div>
+
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="confirm()" >下載</button>
+  <button mat-raised-button mat-dialog-close color="warn">取消</button>
+</mat-dialog-actions>

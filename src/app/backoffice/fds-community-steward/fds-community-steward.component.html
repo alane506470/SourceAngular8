@@ -1,0 +1,124 @@
+<div furyPagePadding furyScrollbar furyPage>
+  <mat-dialog-content class="card_dailog">
+    <mat-card>
+      <mat-toolbar color="primary">新增社區管家</mat-toolbar>
+      <mat-card-content class="card_content" fxLayout="column">
+
+        <mat-tab-group [selectedIndex]="selectedIndex">
+          <mat-tab color="primary" label="社區管家">
+            <form [formGroup]="form1">
+              <div fxLayout="column" style="padding: 16px; ">
+                <div fxLayoutGap="8px">
+                  <mat-form-field fxFlex>
+                    <input formControlName="userName" matInput type="text" placeholder="社區管家姓名">
+                    <mat-error *ngIf="form1.get('userName').hasError('required')">「社區管家姓名」為必填欄位</mat-error>
+                    <mat-error *ngIf="form1.get('userName').hasError('maxlength')">「社區管家姓名」不可超過10個字</mat-error>
+                  </mat-form-field>
+
+
+                  <mat-form-field fxFlex>
+                    <input formControlName="userId" matInput type="text" placeholder="社區管家工號">
+                    <mat-error *ngIf="form1.get('userId').hasError('required')">「社區管家工號」為必填欄位</mat-error>
+                    <mat-error *ngIf="form1.get('userId').hasError('maxlength')">「社區管家工號」不可超過20個字</mat-error>
+                  </mat-form-field>
+
+
+                </div>
+
+                <div fxLayoutGap="8px">
+
+                  <mat-form-field fxFlex>
+                    <input formControlName="mobile" matInput type="text" placeholder="行動電話">
+                    <mat-error *ngIf="form1.get('mobile').hasError('required')">「行動電話」為必填欄位</mat-error>
+                    <mat-error *ngIf="form1.get('mobile').hasError('maxlength')">「行動電話」不可超過10個字</mat-error>
+                    <mat-error *ngIf="form1.get('mobile').hasError('pattern')">「行動電話」格式錯誤</mat-error>
+                  </mat-form-field>
+
+                  <ng-container *ngIf="license_type$ | async as LS; else loading">
+                    <mat-form-field fxFlex>
+                      <mat-select formControlName="license" placeholder="通過檢定品項">
+                        <mat-option *ngFor="let data of license_type$ | async" [value]="data.code">{{data.name}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="form1.get('license').hasError('required')">「通過檢定品項」為必填欄位</mat-error>
+                    </mat-form-field>
+                  </ng-container>
+
+                </div>
+
+                <div fxLayoutGap="8px">
+                  <mat-form-field fxFlex>
+                    <input formControlName="onboardDate" type="text" matInput placeholder="到職日"
+                      [matDatepicker]="onboardDate" readonly>
+                    <mat-datepicker-toggle [for]="onboardDate" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #onboardDate touchUi="true"></mat-datepicker>
+                    <mat-error *ngIf="form1.get('onboardDate').hasError('required')">「到職日」為必填欄位</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field fxFlex>
+                    <input formControlName="quitDate" type="text" matInput placeholder="離職日" [matDatepicker]="quitDate"
+                      readonly>
+                    <mat-datepicker-toggle [for]="quitDate" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #quitDate touchUi="true"></mat-datepicker>
+                  </mat-form-field>
+
+                </div>
+
+                <div fxLayoutGap="8px">
+                  <mat-form-field fxFlex>
+                    <input formControlName="storeMgrName" matInput type="text" placeholder="店長姓名" required maxlength=20>
+                    <mat-error *ngIf="form1.get('storeMgrName').hasError('required')">「店長姓名」為必填欄位</mat-error>
+                    <mat-error *ngIf="form1.get('storeMgrName').hasError('maxlength')">「店長姓名」不可超過10個字</mat-error>
+                  </mat-form-field>
+
+
+                  <mat-form-field fxFlex>
+                    <input formControlName="storeMgrId" matInput type="text" placeholder="店長工號">
+                    <mat-error *ngIf="form1.get('storeMgrId').hasError('required')">「店長工號」為必填欄位</mat-error>
+                    <mat-error *ngIf="form1.get('storeMgrId').hasError('maxlength')">「店長工號」不可超過20個字</mat-error>
+                  </mat-form-field>
+
+
+                </div>
+
+                <div fxLayoutGap="8px">
+                  <mat-form-field fxFlex>
+                    <input formControlName="dutymName" matInput type="text" placeholder="管理者姓名" required maxlength=20>
+                    <mat-error *ngIf="form1.get('dutymName').hasError('required')">「管理者姓名」為必填欄位</mat-error>
+                    <mat-error *ngIf="form1.get('dutymName').hasError('maxlength')">「管理者姓名」不可超過10個字</mat-error>
+                  </mat-form-field>
+
+
+                  <mat-form-field fxFlex>
+                    <input formControlName="dutymId" matInput type="text" placeholder="管理者工號">
+                    <mat-error *ngIf="form1.get('dutymId').hasError('required')">「管理者工號」為必填欄位</mat-error>
+                    <mat-error *ngIf="form1.get('dutymId').hasError('maxlength')">「管理者工號」不可超過20個字</mat-error>
+                  </mat-form-field>
+
+                </div>
+
+                <mat-form-field fxFlex class="example-full-width">
+                  <textarea formControlName="remark" rows="6" matInput placeholder="備註"></textarea>
+                  <mat-error *ngIf="form1.get('remark').hasError('maxlength')">「備註」不可超過200個字</mat-error>
+                </mat-form-field>
+
+                <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
+                  <button color="warn" mat-raised-button type="button" (click)="reset()">重設</button>
+                  <button color="primary" mat-raised-button (click)="saveForm(this.form1.value)"
+                    >新增</button>
+                </div>
+              </div>
+            </form>
+          </mat-tab>
+
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </mat-dialog-content>
+</div>
+
+<ng-template #loading>
+  <fury-loading-overlay [isLoading]="isLoadingLS"></fury-loading-overlay>
+</ng-template>
+
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

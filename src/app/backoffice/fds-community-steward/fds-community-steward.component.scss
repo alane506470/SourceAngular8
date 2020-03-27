@@ -1,0 +1,21 @@
+.card_content {
+  border-bottom-color:rgb(192,192,192);
+  border-right-color:rgb(192,192,192);
+  border-left-color:rgb(192,192,192);
+  border-bottom-width:2px;
+  border-right-width:2px;
+  border-left-width:2px;
+  border-bottom-style:groove;
+  border-right-style: groove;
+  border-left-style: groove;
+}
+
+mat-card{
+  padding: 16px 50px !important;
+}
+
+mat-dialog-content {
+  height: auto;
+  max-height: 150% !important;
+  overflow: auto !important;
+}

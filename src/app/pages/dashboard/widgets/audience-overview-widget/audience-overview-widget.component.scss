@@ -1,0 +1,52 @@
+@import "var";
+
+:host {
+  height: 100%;
+}
+
+.header {
+
+  .property {
+    padding: $spacing;
+    cursor: pointer;
+    border-top: 4px solid transparent;
+
+    .label {
+      @include mat-typography-level-to-styles($config, body-1);
+      padding-bottom: $spacing/4;
+    }
+
+    .value {
+      @include mat-typography-level-to-styles($config, headline);
+      font-weight: 300;
+    }
+
+    .gain {
+      @include mat-typography-level-to-styles($config, caption);
+
+      .icon {
+        font-size: 13px;
+        height: 13px;
+        width: 13px;
+        vertical-align: middle;
+      }
+    }
+
+    .compared {
+      @include mat-typography-level-to-styles($config, caption);
+      visibility: hidden;
+    }
+  }
+}
+
+.card-content {
+  height: 248px;
+}
+
+.actions {
+  .select {
+    margin-top: -24px;
+    margin-bottom: -1.34375em;
+    font-size: 14px;
+  }
+}

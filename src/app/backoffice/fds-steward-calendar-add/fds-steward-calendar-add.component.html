@@ -1,0 +1,263 @@
+<div furyPagePadding furyScrollbar furyPage>
+  <mat-dialog-content class="card_dailog">
+    <mat-card>
+      <mat-toolbar color="primary">社區管家行事曆</mat-toolbar>
+      <mat-card-content class="card_content" fxLayout="column">
+
+        <mat-tab-group [selectedIndex]="selectedIndex">
+          <mat-tab color="primary" label="新增行事曆">
+            <form [formGroup]="form1">
+              <div fxLayout="column" style="padding: 16px; ">
+                <div fxLayoutGap="8px">
+
+                  <div class="search-wrapper" fxLayout="row" [ngClass]="{ 'focus': focused, 'has-input': input }" fxFlex
+                    (furyClickOutside)="closeDropdown()">
+                    <mat-form-field fxFlex>
+
+                      <input formControlName="userId" [(ngModel)]="input" (focus)="openDropdown()"
+                        (ngModelChange)="this.searchTerm$.next($event)" matInput type="search" placeholder="社區管家姓名">
+                      <mat-error *ngIf="form1.get('userId').hasError('required')">「社區管家姓名」為必填欄位</mat-error>
+                    </mat-form-field>
+
+                    <div class="search-dropdown">
+                      <div class="content results" *ngIf="input" fxLayout="column">
+                        <div class="heading" fxLayout="row" fxLayoutAlign="start center">
+                          <mat-icon class="icon">search</mat-icon>
+                          Search results for: {{ input}}
+                        </div>
+                        <div class="items">
+                          <div class="item" matRipple *ngFor="let Item of dynamicUser"
+                            (click)="closeDropdown(); selectUserInCharge(Item)">
+                            {{Item.userName}} {{Item.userId}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+
+                <div fxLayoutGap="8px">
+                  <mat-form-field fxFlex>
+                    <input formControlName="startDate" type="text" matInput placeholder="開始時間"
+                      [matDatepicker]="startDate" readonly>
+                    <mat-datepicker-toggle [for]="startDate" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #startDate touchUi="true"></mat-datepicker>
+                    <mat-error *ngIf="form1.get('startDate').hasError('required')">「開始時間」為必填欄位</mat-error>
+                  </mat-form-field>
+
+
+                  <mat-form-field fxFlex>
+                    <input formControlName="endDate" type="text" matInput placeholder="結束時間" [matDatepicker]="endDate"
+                      readonly>
+                    <mat-datepicker-toggle [for]="endDate" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #endDate touchUi="true"></mat-datepicker>
+                    <mat-error *ngIf="form1.get('endDate').hasError('required')">「結束時間」為必填欄位</mat-error>
+                  </mat-form-field>
+
+                </div>
+
+                <div fxLayoutGap="8px">
+                  <ng-container *ngIf="getVisitType$ | async as VT; else loading">
+                    <mat-form-field fxFlex>
+                      <mat-select formControlName="visitType" placeholder="行程類別">
+                        <mat-option *ngFor="let data of VT" [value]="data.code">{{data.name}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="form1.get('visitType').hasError('required')">「行程類別」為必填欄位</mat-error>
+                    </mat-form-field>
+                  </ng-container>
+
+                  <mat-form-field fxFlex>
+                    <input formControlName="visitPlace" matInput type="text" placeholder="拜訪地點">
+                    <mat-error *ngIf="form1.get('visitPlace').hasError('required')">「拜訪地點」為必填欄位</mat-error>
+                  </mat-form-field>
+
+                </div>
+
+                <div fxLayoutGap="8px">
+                  <ng-container *ngIf="getContact$ | async as CT; else loading">
+                    <mat-form-field fxFlex>
+                      <mat-select formControlName="contact" placeholder="接觸方式">
+                        <mat-option *ngFor="let data of CT" [value]="data.code">{{data.name}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="form1.get('contact').hasError('required')">「接觸方式」為必填欄位</mat-error>
+                    </mat-form-field>
+                  </ng-container>
+
+                  <ng-container *ngIf="getContactPeople$ | async as CP; else loading">
+                    <mat-form-field fxFlex>
+                      <mat-select formControlName="contactP" placeholder="接觸對象" multiple>
+                        <mat-option *ngFor="let data of CP" [value]="data.code">{{data.name}}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="form1.get('contactP').hasError('required')">「接觸對象」為必填欄位</mat-error>
+                    </mat-form-field>
+                  </ng-container>
+                </div>
+
+                <mat-form-field fxFlex>
+                  <input formControlName="subject" matInput type="text" placeholder="標題">
+                </mat-form-field>
+
+                <mat-form-field fxFlex class="example-full-width">
+                  <textarea formControlName="visitRec" rows="6" matInput placeholder="接觸紀錄"></textarea>
+                  <mat-error *ngIf="form1.get('visitRec').hasError('maxlength')">「接觸紀錄」不可超過400個字</mat-error>
+                </mat-form-field>
+
+                <!-- <input matInput type="text" formControlName="" hidden=true> -->
+
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <label for="singleFile1">上傳附件：</label>
+                  <input id="singleFile1" type="file" ng2FileSelect [uploader]="uploader" (click)="handleFileInput($event.target.files,'zero')">
+                </div>
+
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <table *ngIf="uploader?.queue" class="uploader-table table">
+                    <thead>
+                      <tr>
+                        <th class="classtr">檔案名稱</th>
+                        <th class="classtr">檔案大小</th>
+                        <!-- <th class="classtr">上傳進度</th>
+                        <th class="classtr">操作</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of uploader.queue">
+                        <td>
+                          <strong>{{ item?.file?.name }}</strong>
+                        </td>
+                        <td *ngIf="uploader" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                        <td>{{uploader.progress}}%</td>
+                        <td>
+                          <button mat-raised-button mat-icon-button matTooltip="上傳" color="accent"
+                            (click)="fileUploadSubmit('zero')" [disabled]="!uploader.getNotUploadedItems().length">
+                            <mat-icon>cloud_upload</mat-icon>
+                          </button>
+
+                          <button mat-raised-button mat-icon-button color="warn" matTooltip="移除"
+                            [disabled]="!uploader.queue[0].isUploaded" (click)="uploader.clearQueue(); fileDelSubmit(this.attachIdZero)">
+                           <mat-icon>cloud_off</mat-icon>
+                          </button>
+
+                          <button mat-raised-button mat-icon-button type="button" class="btn btn-danger btn-s" (click)="uploader.clearQueue()" matTooltip="取消"
+                            [disabled]="uploader.queue[0].isUploaded">
+                            <mat-icon>remove</mat-icon>
+                          </button>
+
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <label for="singleFile2">上傳附件：</label>
+                  <input id="singleFile2" type="file" ng2FileSelect [uploader]="uploader1" (click)="handleFileInput($event.target.files,'one')">
+                </div>
+
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <table *ngIf="uploader1?.queue" class="uploader-table table">
+                    <thead>
+                      <tr>
+                        <th class="classtr">檔案名稱</th>
+                        <th class="classtr">檔案大小</th>
+                        <!-- <th class="classtr">上傳進度</th>
+                        <th class="classtr">操作</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of uploader1.queue">
+                        <td>
+                          <strong>{{ item?.file?.name }}</strong>
+                        </td>
+                        <td *ngIf="uploader1" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                        <td>{{uploader1.progress}}%</td>
+                        <td>
+                          <button mat-raised-button mat-icon-button matTooltip="上傳" color="accent"
+                            (click)="fileUploadSubmit('one')" [disabled]="!uploader1.getNotUploadedItems().length">
+                            <mat-icon>cloud_upload</mat-icon>
+                          </button>
+
+                          <button mat-raised-button mat-icon-button color="warn" matTooltip="移除"
+                            [disabled]="!uploader1.queue[0].isUploaded" (click)="uploader1.clearQueue(); fileDelSubmit(this.attachIdFirst)">
+                           <mat-icon>cloud_off</mat-icon>
+                          </button>
+
+                          <button mat-raised-button mat-icon-button type="button" class="btn btn-danger btn-s" (click)="uploader1.clearQueue()" matTooltip="取消"
+                            [disabled]="uploader1.queue[0].isUploaded">
+                            <mat-icon>remove</mat-icon>
+                          </button>
+
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <label for="singleFile2">上傳附件：</label>
+                  <input id="singleFile2" type="file" ng2FileSelect [uploader]="uploader2" (click)="handleFileInput($event.target.files,'two')">
+                </div>
+
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <table *ngIf="uploader2?.queue" class="uploader-table table">
+                    <thead>
+                      <tr>
+                        <th class="classtr">檔案名稱</th>
+                        <th class="classtr">檔案大小</th>
+                        <!-- <th class="classtr">上傳進度</th>
+                        <th class="classtr">操作</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of uploader2.queue">
+                        <td>
+                          <strong>{{ item?.file?.name }}</strong>
+                        </td>
+                        <td *ngIf="uploader2" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                        <td>{{uploader2.progress}}%</td>
+                        <td>
+                          <button mat-raised-button mat-icon-button matTooltip="上傳" color="accent"
+                            (click)="fileUploadSubmit('two')" [disabled]="!uploader2.getNotUploadedItems().length">
+                            <mat-icon>cloud_upload</mat-icon>
+                          </button>
+
+                          <button mat-raised-button mat-icon-button color="warn" matTooltip="移除"
+                            [disabled]="!uploader2.queue[0].isUploaded" (click)="uploader2.clearQueue(); fileDelSubmit(this.attachIdTwo)">
+                           <mat-icon>cloud_off</mat-icon>
+                          </button>
+
+                          <button mat-raised-button mat-icon-button type="button" class="btn btn-danger btn-s" (click)="uploader2.clearQueue()" matTooltip="取消"
+                            [disabled]="uploader2.queue[0].isUploaded">
+                            <mat-icon>remove</mat-icon>
+                          </button>
+
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+
+                <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
+                  <button color="warn" mat-raised-button type="button" (click)="reset('form1')">重設</button>
+                  <button color="primary" mat-raised-button (click)="sendForm(this.form1.value)">儲存</button>
+                </div>
+              </div>
+            </form>
+          </mat-tab>
+
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </mat-dialog-content>
+</div>
+
+<ng-template #loading>
+  <fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>
+</ng-template>
+
+<fury-loading-overlay [isLoading]="fileisLoading"></fury-loading-overlay>

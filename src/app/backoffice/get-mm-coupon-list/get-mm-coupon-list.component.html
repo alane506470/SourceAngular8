@@ -1,0 +1,231 @@
+<div class="getmmcouponlist" furyPage furyPagePadding furyScrollbar>
+  <mat-toolbar color="primary">購物金/折價券查詢</mat-toolbar>
+  <div fxLayout="row" fxLayoutAlign="center center">
+
+    <mat-card fxFlex="100%">
+
+      <mat-card-content fxLayout="column">
+        <form [formGroup]="form1">
+          <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="8px">
+
+            <mat-form-field fxFlex hintLabel="最多輸入14位數號碼">
+              <input matInput type="text" placeholder="會員編號" formControlName="memberId" required maxlength=14>
+              <mat-hint align="end">{{ form1.get('memberId').value?.length }}/14</mat-hint>
+              <mat-error *ngIf="form1.get('memberId').hasError('required')">「會員編號」為必填欄位</mat-error>
+            </mat-form-field>
+
+          </div>
+
+
+
+        </form>
+        <div fxLayout="row" fxLayoutAlign="end center">
+          <button [disabled]="!this.form1.valid" color="primary" mat-raised-button style="margin-left: 8px;" (click)="getCouponList()"
+            type="button">查詢</button>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <br>
+  <div>
+
+    <mat-card fxFlex="100%" style="padding: 0;">
+
+      <mat-card-content fxLayout="column">
+        <mat-tab-group>
+          <mat-tab color="primary" label="購物金">
+            <mat-tab-group>
+
+              <mat-tab color="primary" label="我的購物金">
+                <div *ngFor="let item of unUseShopGold">
+                  <mat-card>
+                    <table class="card-detail">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <h5>{{item.name}}</h5>
+                            <h5>
+                              <span>{{item.msg2}} {{item.rebateSum}} {{item.msg3}}</span>
+                            </h5>
+                            <h5 class="quantityLeft">{{item.endDate | date:'yyyy/MM/dd'}} 到期</h5>
+                            <h5 class="quantityLeft">{{item.qty}} 張</h5>
+                          </td>
+                          <td width="201px">
+                            <img [src]='item.channelIdList.length===2? "../../../../assets/img/shopping-gold_tlw.jpg":item.channelIdList[0]==="TLW" ?"../../../../assets/img/shopping-gold_tlw.jpg":"../../../../assets/img/shopping-gold_hola.jpg"'
+                              style="width:200px;height: 200px;" />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </mat-card>
+                </div>
+              </mat-tab>
+              <mat-tab color="primary" label="已使用購物金">
+                <div *ngFor="let item of UsedShopGold">
+                  <mat-card>
+                    <table class="card-detail">
+                      <tbody>
+                        <tr>
+                          <td class="used">已使用
+                          </td>
+                          <td>
+                            <h5>{{item.name}}</h5>
+                            <h5>
+                              <span>{{item.msg2}} {{item.rebateSum}} {{item.msg3}}</span>
+                            </h5>
+                            <h5 class="quantityLeft">{{item.endDate | date:'yyyy/MM/dd'}} 到期</h5>
+                            <h5 class="quantityLeft">{{item.qty}} 張</h5>
+                          </td>
+                          <td width="201px">
+                            <img [src]='item.channelIdList.length===2? "../../../../assets/img/shopping-gold_tlw.jpg":item.channelIdList[0]==="TLW" ?"../../../../assets/img/shopping-gold_tlw.jpg":"../../../../assets/img/shopping-gold_hola.jpg"'
+                              style="width:200px;height: 200px;" />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </mat-card>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+
+
+          </mat-tab>
+          <mat-tab color="primary" label="折價券">
+            <mat-tab-group>
+
+              <mat-tab color="primary" label="我的折價券">
+                <div *ngFor="let item of unUseCoupon">
+                  <mat-card>
+                    <table class="card-detail">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <h5>{{item.name}}</h5>
+                            <h5>
+                              <span>{{item.msg2}} {{item.rebateSum}} {{item.msg3}}</span>
+                            </h5>
+                            <h5 class="quantityLeft">{{item.endDate | date:'yyyy/MM/dd'}} 到期</h5>
+                            <h5 class="quantityLeft">{{item.qty}} 張</h5>
+                          </td>
+                          <td width="201px">
+                            <img [src]='item.channelIdList.length===2? "../../../../assets/img/gift-discount_tlw.jpg":item.channelIdList[0]==="TLW" ?"../../../../assets/img/gift-discount_tlw.jpg":"../../../../assets/img/gift-discount_hola.jpg"'
+                              style="width:200px;height: 200px;" />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </mat-card>
+                </div>
+              </mat-tab>
+              <mat-tab color="primary" label="已使用折價券">
+                <div *ngFor="let item of UsedCoupon">
+                  <mat-card>
+                    <table class="card-detail">
+                      <tbody>
+                        <tr>
+                          <td class="used">已使用
+                          </td>
+                          <td>
+                            <h5>{{item.name}}</h5>
+                            <h5>
+                              <span>{{item.msg2}} {{item.rebateSum}} {{item.msg3}}</span>
+                            </h5>
+                            <h5 class="quantityLeft">{{item.endDate | date:'yyyy/MM/dd'}} 到期</h5>
+                            <h5 class="quantityLeft">{{item.qty}} 張</h5>
+                          </td>
+                          <td width="201px">
+                            <img [src]='item.channelIdList.length===2? "../../../../assets/img/gift-discount_tlw.jpg":item.channelIdList[0]==="TLW" ?"../../../../assets/img/gift-discount_tlw.jpg":"../../../../assets/img/gift-discount_hola.jpg"'
+                              style="width:200px;height: 200px;" />
+
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </mat-card>
+                </div>
+              </mat-tab>
+
+            </mat-tab-group>
+
+          </mat-tab>
+          <mat-tab color="primary" label="APP會員註冊狀態">
+            <mat-card fxFlex="100%" style="padding: 20px;">
+              <label>會員編號：</label>{{ this.appMember.memberId}}
+              <p>
+                <label>是否註冊：</label>{{ this.appMember.isRegister}}
+                <p>
+                  <label>APP註冊日期：</label>{{ this.appMember.appRegDate}}
+                  <p>
+                    <label>首次登入日期：</label>{{ this.appMember.firstLogin}}
+                    <p>
+                      <label>最後登入日期：</label>{{ this.appMember.lastLogin}}
+                      <p>
+                        <label>建立日期：</label>{{ this.appMember.createDate}}
+
+            </mat-card>
+
+          </mat-tab>
+          <mat-tab color="primary" label="APP會員偏好設定" >
+              
+          <mat-card padding>
+            <mat-toolbar>關注商品</mat-toolbar>
+            <table *ngIf="this.appMemberLikeProd.length>0" class="table">
+              <thead>
+                <tr>
+                  <th>商品類別</th>
+                  <th>建立日期</th>
+                  <th>建立人員</th>
+                  <th>修改日期</th>
+                  <th>修改人員</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let prod of this.appMemberLikeProd">
+                  <td>
+                    <strong>{{ prod?.descr }}</strong>
+                  </td>
+                  <td>{{prod.createDate}}</td>
+                  <td>{{prod.creator}}</td>
+                  <td>{{prod.modifyDate}}</td>
+                  <td>{{prod.modifier}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </mat-card>
+
+          <mat-card padding>
+              <mat-toolbar>關注店鋪</mat-toolbar>
+              <table *ngIf="this.appMemberLikeStore.length>0" class="table">
+                <thead>
+                  <tr>
+                    <th>店鋪</th>
+                    <th>建立日期</th>
+                    <th>建立人員</th>
+                    <th>修改日期</th>
+                    <th>修改人員</th>
+  
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let prod of this.appMemberLikeStore">
+                    <td>
+                      <strong>{{ prod?.descr }}</strong>
+                    </td>
+                    <td>{{prod.createDate}}</td>
+                    <td>{{prod.creator}}</td>
+                    <td>{{prod.modifyDate}}</td>
+                    <td>{{prod.modifier}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-card>
+
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

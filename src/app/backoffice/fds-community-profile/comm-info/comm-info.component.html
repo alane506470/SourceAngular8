@@ -1,0 +1,130 @@
+<form [formGroup]="form1">
+  <div fxLayout="column" style="padding: 16px; ">
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <input formControlName="commName" matInput type="text" placeholder="社區名稱">
+        <mat-error *ngIf="form1.get('commName').hasError('maxlength')">「社區名稱」不可超過40個字</mat-error>
+        <mat-error *ngIf="form1.get('commName').hasError('required')">「社區名稱」為必填欄位</mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex>
+        <input formControlName="commId" matInput type="text" placeholder="社區代碼" readonly>
+      </mat-form-field>
+    </div>
+
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <mat-select formControlName="commAdd1" placeholder="社區所在縣市" (selectionChange)="changeTownshipId($event.value)">
+          <mat-option *ngFor="let data of getCountyId" [value]="data.code">{{data.name}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex>
+        <mat-select formControlName="commAdd2" placeholder="社區所在鄉鎮市區">
+          <mat-option *ngFor="let data of getTownshipId" [value]="data.code">{{data.name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <input formControlName="commAdd3" matInput type="text" placeholder="社區代表地址">
+        <mat-error *ngIf="form1.get('commAdd3').hasError('required')">「社區代表地址」為必填欄位</mat-error>
+      </mat-form-field>
+    </div>
+    <div fxLayoutGap="8px">
+      <ng-container *ngIf="getSiteInCharge$ | async as SIC; else loading">
+        <mat-form-field fxFlex>
+          <mat-select formControlName="siteInCharge" placeholder="負責分店">
+            <mat-option *ngFor="let data of SIC" [value]="data.code">{{data.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form1.get('siteInCharge').hasError('required')">「負責分店」為必填欄位</mat-error>
+        </mat-form-field>
+      </ng-container>
+
+      <div class="search-wrapper" fxLayout="row" [ngClass]="{ 'focus': focused, 'has-input': input }" fxFlex
+        (furyClickOutside)="closeDropdown()">
+        <mat-form-field fxFlex>
+          <input formControlName="userInCharge" (focus)="openDropdown()" (ngModelChange)="this.searchTerm$.next($event)"
+            matInput type="search" placeholder="負責社區管家">
+          <mat-error *ngIf="form1.get('userInCharge').hasError('required')">「負責社區管家」為必填欄位</mat-error>
+        </mat-form-field>
+
+        <div class="search-dropdown">
+          <div class="content results" *ngIf="focused" fxLayout="column">
+            <div class="items">
+              <div class="item" matRipple *ngFor="let Item of dynamicUser"
+                (click)="closeDropdown(); selectUserInCharge(Item)">
+                {{Item.userName}} {{Item.userId}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <input formControlName="numHouse" matInput type="number" placeholder="社區戶數">
+        <mat-error *ngIf="form1.get('numHouse').hasError('pattern')">只限數字</mat-error>
+        <mat-error *ngIf="form1.get('numHouse').hasError('required')">只限數字</mat-error>
+      </mat-form-field>
+
+      <ng-container *ngIf="getStatus$ | async as STS; else loading">
+        <mat-form-field fxFlex>
+          <mat-select formControlName="status" placeholder="經營狀態">
+            <mat-option *ngFor="let data of STS" [value]="data.code">{{data.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-container>
+
+    </div>
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <input formControlName="chiefStaffName" matInput type="text" placeholder="總幹事姓名">
+        <mat-error *ngIf="form1.get('chiefStaffName').hasError('maxlength')">「總幹事姓名」不可超過20個字</mat-error>
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <input formControlName="chiefStaffTel" matInput type="text" placeholder="總幹事電話">
+        <mat-error *ngIf="form1.get('chiefStaffTel').hasError('maxlength')">「總幹事電話」不可超過20個字</mat-error>
+      </mat-form-field>
+    </div>
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <input formControlName="chiefStaffMobile" matInput type="text" placeholder="總幹事手機">
+        <mat-error *ngIf="form1.get('chiefStaffMobile').hasError('maxlength')">「總幹事手機」不可超過10個字</mat-error>
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <input formControlName="chairmanName" matInput type="text" placeholder="主委姓名">
+        <mat-error *ngIf="form1.get('chairmanName').hasError('maxlength')">「主委姓名」不可超過20個字</mat-error>
+      </mat-form-field>
+    </div>
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <input formControlName="chairmanTel" matInput type="text" placeholder="主委電話">
+        <mat-error *ngIf="form1.get('chairmanTel').hasError('maxlength')">「主委電話」不可超過20個字</mat-error>
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <input formControlName="chairmanMobile" matInput type="text" placeholder="主委手機">
+        <mat-error *ngIf="form1.get('chairmanMobile').hasError('maxlength')">「主委手機」不可超過10個字</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
+      <button color="warn" mat-raised-button type="button" (click)="reset(this.form1)">重設</button>
+      <button mat-raised-button type="button" (click)="saveForm()">儲存</button>
+      <ng-content select="button"></ng-content>
+    </div>
+  </div>
+</form>
+
+<ng-template #loading>
+  <fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>
+</ng-template>
+
+<fury-loading-overlay [isLoading]="commIdisLoading"></fury-loading-overlay>

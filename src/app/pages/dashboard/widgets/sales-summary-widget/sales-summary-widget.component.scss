@@ -1,0 +1,50 @@
+@import "var";
+
+.gain {
+  margin-left: $spacing/3;
+  @include mat-typography-level-to-styles($config, caption);
+
+  .mat-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+    line-height: 18px;
+  }
+}
+
+.card-content {
+  padding: 0;
+
+  .sections {
+    padding: 0 $spacing $spacing;
+
+    .section {
+
+      .label {
+        @include mat-typography-level-to-styles($config, body-1);
+        text-transform: uppercase;
+      }
+
+      .value {
+        @include mat-typography-level-to-styles($config, display-1);
+
+        .indicator {
+          margin-left: $spacing/8;
+          font-size: 32px;
+          height: 32px;
+          width: 32px;
+        }
+      }
+    }
+  }
+
+  .content {
+    height: 170px;
+    max-width: 100%;
+    display: flex;
+    flex: 1;
+    position: relative;
+  }
+
+}
+

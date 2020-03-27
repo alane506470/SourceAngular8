@@ -1,0 +1,50 @@
+<form [formGroup]="form5">
+  <div fxLayout="column" style="padding: 16px; ">
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <mat-select formControlName="acType" placeholder="冷氣類型">
+          <mat-option *ngFor="let data of getAirType$ | async" [value]="data.code">{{data.name}}</mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <mat-select formControlName="windowType" placeholder="窗型" multiple>
+          <mat-option *ngFor="let data of getWindowType$ | async" [value]="data.code">{{data.name}}
+          </mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+      </mat-form-field>
+    </div>
+
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <mat-select formControlName="separateType" placeholder="分離式外機" multiple>
+          <mat-option *ngFor="let data of getSeparateType$ | async" [value]="data.code">{{data.name}}</mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+
+      </mat-form-field>
+      <mat-form-field fxFlex>
+        <mat-select formControlName="indoorType" placeholder="室內機有預留排水" multiple>
+          <mat-option *ngFor="let data of getIndoorType$ | async" [value]="data.code">{{data.name}}
+          </mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+      </mat-form-field>
+    </div>
+
+    <mat-form-field fxFlex>
+      <mat-select formControlName="sunType" placeholder="西曬空間" multiple>
+        <mat-option *ngFor="let data of getSunType$ | async" [value]="data.code">{{data.name}}
+        </mat-option>
+      </mat-select>
+      <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+    </mat-form-field>
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
+      <button color="warn" mat-raised-button type="button" (click)="reset(this.form5)">重設</button>
+      <button mat-raised-button type="button" [disabled]="this.form5.invalid" (click)="saveForm()">儲存</button>
+      <ng-content select="button"></ng-content>
+    </div>
+  </div>
+</form>

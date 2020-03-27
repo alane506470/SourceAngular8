@@ -1,0 +1,65 @@
+<div fxLayout="row" fxLayoutAlign="center start" furyPagePadding furyScrollbar furyPage>
+    <mat-dialog-content class="card_dailog">
+      <mat-card>
+        <mat-toolbar color="primary">新增社區資料</mat-toolbar>
+        <mat-card-content class="card_content" fxLayout="column">
+          <mat-tab-group [(selectedIndex)]="selectedIndex">
+            <mat-tab color="primary" label="社區資料">
+              <comm-info [modify]="CommInfoData" (getModal)="saveForm($event)" (sendForm)="sendForm()">
+                <button class="next" color="primary" mat-raised-button (click)="nextStep()">下一頁</button>
+              </comm-info>
+            </mat-tab>
+
+            <mat-tab color="primary" label="建築結構">
+              <construction [modify]="Constructor" (getModal)="saveForm($event)" (sendForm)="sendForm()">
+                <mat-form-field fxFlex>
+                  <textarea [(ngModel)]="remark" rows="6" matInput placeholder="備註"></textarea>
+                </mat-form-field>
+                <button color="primary" mat-raised-button (click)="nextStep()">下一頁</button>
+              </construction>
+            </mat-tab>
+
+            <mat-tab color="primary" label="住戶組織">
+              <household [modify]="HouseHoldDate" (getModal)="saveForm($event)" (sendForm)="sendForm()">
+                <button color="primary" mat-raised-button (click)="nextStep()">下一頁</button>
+              </household>
+            </mat-tab>
+
+            <mat-tab color="primary" label="水電瓦斯">
+              <hydropower [modify]="Hydropower" (getModal)="saveForm($event)" (sendForm)="sendForm()">
+                <mat-form-field fxFlex>
+                  <textarea [(ngModel)]="remark" rows="6" matInput placeholder="備註"></textarea>
+                </mat-form-field>
+                <button color="primary" mat-raised-button (click)="nextStep()">下一頁</button>
+              </hydropower>
+            </mat-tab>
+            <mat-tab color="primary" label="冷氣空調">
+              <air [modify]="AirData" (getModal)="saveForm($event)" (sendForm)="sendForm()">
+                <button color="primary" mat-raised-button (click)="nextStep()">下一頁</button>
+              </air>
+            </mat-tab>
+            <mat-tab color="primary" label="衛浴陽台">
+              <bath [modify]="BathData" (getModal)="saveForm($event)" (sendForm)="sendForm()">
+                <mat-form-field fxFlex>
+                  <textarea [(ngModel)]="remark" rows="6" matInput placeholder="備註"></textarea>
+                </mat-form-field>
+                <button color="primary" mat-raised-button (click)="nextStep()">下一頁</button>
+              </bath>
+            </mat-tab>
+            <mat-tab color="primary" label="行銷方式">
+              <marketing [modify]="Marketing" (getModal)="saveForm($event)" (sendForm)="sendForm()">
+                <button color="primary" mat-raised-button (click)="nextStep()">下一頁</button>
+              </marketing>
+            </mat-tab>
+
+            <mat-tab color="primary" label="其他">
+              <other [modify]="Other" (getModal)="saveForm($event)" (sendForm)="sendForm()"></other>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card-content>
+      </mat-card>
+    </mat-dialog-content>
+  </div>
+
+
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

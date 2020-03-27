@@ -1,0 +1,14 @@
+.fury-title {
+  @include mat-typography-level-to-styles($config, title);
+  color: $theme-text;
+  display: block;
+
+  mat-icon {
+    margin-right: $padding-sm;
+    vertical-align: text-bottom;
+  }
+
+  span {
+    display: inline-block;
+  }
+}

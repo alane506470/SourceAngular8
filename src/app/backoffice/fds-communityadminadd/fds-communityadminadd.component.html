@@ -1,0 +1,41 @@
+<div class="fds-communityadd" furyScrollbar fxLayout="row" fxLayoutAlign="center center">
+  <div class="card">
+    <mat-dialog-content class="card_dailog">
+      <mat-card fxFlex="100%">
+        <mat-toolbar color="primary">新增管理員</mat-toolbar>
+        <mat-card-content>
+          <fieldset id="fiel1">
+
+            <form [formGroup]="form1">
+              <div fxLayout="column" style="padding: 16px; ">
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <mat-form-field fxFlex>
+                    <mat-select formControlName="commId" placeholder="社區名稱">
+                      <mat-option *ngFor="let data of communityList" [value]="data.commId">{{data.commName}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <mat-form-field fxFlex>
+                    <input matInput type="number" placeholder="管理員帳戶組數" formControlName="admNum" maxlength='3' required>
+
+                    <mat-error *ngIf="form1.get('admNum').hasError('require')">「管理員帳戶組數」為必填欄位</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+
+            <div fxLayout="row" fxLayoutAlign="end center">
+              <button color="primary" mat-raised-button style="margin-left: 8px;" type="button" (click)="addadmin()"
+                [disabled]="!(form1.get('commId').value && form1.get('admNum').value)">新增</button>
+            </div>
+          </fieldset>
+        </mat-card-content>
+      </mat-card>
+    </mat-dialog-content>
+  </div>
+</div>
+
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

@@ -1,0 +1,22 @@
+@import "var";
+
+.content {
+  max-width: 100%;
+  display: flex;
+  flex: 1;
+  position: relative;
+}
+
+.footer {
+  .section {
+
+    .value {
+      @include mat-typography-level-to-styles($config, title);
+    }
+
+    .label {
+      @include mat-typography-level-to-styles($config, body-2);
+      text-transform: uppercase;
+    }
+  }
+}

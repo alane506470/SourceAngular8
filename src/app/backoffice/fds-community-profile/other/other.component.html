@@ -1,0 +1,21 @@
+<form [formGroup]="form8">
+    <div fxLayout="column" style="padding: 16px; ">
+
+        <mat-form-field fxFlex>
+          <mat-select formControlName="trash" placeholder="垃圾處理方式">
+            <mat-option *ngFor="let data of getTrash_type$ | async" [value]="data.code">{{data.name}}</mat-option>
+          </mat-select>
+
+
+        </mat-form-field>
+        <mat-form-field fxFlex>
+            <input formControlName="trashTime" matInput type="text" placeholder="丟垃圾的時間">
+            <mat-error *ngIf="form8.get('trashTime').hasError('maxlength')">「丟垃圾的時間」不可超過20個字</mat-error>
+          </mat-form-field>
+
+      <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
+        <button color="warn" mat-raised-button type="button" (click)="reset(this.form8)">重設</button>
+        <button mat-raised-button type="button" [disabled]="this.form8.invalid" (click)="saveForm()">儲存</button>
+      </div>
+    </div>
+  </form>

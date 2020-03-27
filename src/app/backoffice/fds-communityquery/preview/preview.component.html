@@ -1,0 +1,48 @@
+<div class="communityUpdate" furyScrollbar fxLayout="row" fxLayoutAlign="center start">
+    <mat-dialog-content>
+    <mat-toolbar color="primary">社區修改</mat-toolbar>
+    <fieldset>
+    <form [formGroup]="form1">
+      <div fxLayout="column" style="padding: 16px; ">
+        <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+          <mat-form-field fxFlex>
+            <input matInput type="text" placeholder="社區名稱" formControlName="commName" required>
+            <input matInput type="text" placeholder="社區編號" formControlName="commId" [hidden]='true'>
+          </mat-form-field>
+        </div>
+
+        <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+          <mat-form-field fxFlex>
+            <mat-select formControlName="commAdd1" placeholder="社區所在縣市"
+              (selectionChange)="changeTownshipId($event.value)" required>
+              <mat-option *ngFor="let data of getCountyId" [value]="data.code">{{data.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+          <mat-form-field fxFlex>
+            <mat-select formControlName="commAdd2" placeholder="社區所在縣鎮市區" required>
+              <mat-option *ngFor="let data of getTownshipId" [value]="data.code">{{data.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="">「社區所在縣鎮市區」為必填欄位</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+          <mat-form-field fxFlex>
+            <input matInput type="text" placeholder="地址" formControlName="commAdd3" required>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="end center">
+        <button id="submitButtom" color="primary" mat-raised-button style="margin-left: 8px;" [disabled]="!form1.valid"
+          type="submit" (click)="onSubmit()">儲存</button>
+      </div>
+    </form>
+  </fieldset>
+  </mat-dialog-content>
+</div>
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

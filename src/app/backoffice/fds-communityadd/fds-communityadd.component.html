@@ -1,0 +1,158 @@
+<div class="fds-communityadd" furyPagePadding furyScrollbar furyPage>
+  <div fxLayout="row" fxLayoutAlign="center start">
+    <div class="card">
+      <mat-dialog-content class="card_dailog">
+        <mat-card fxFlex="100%">
+          <mat-toolbar color="primary">新增社區</mat-toolbar>
+          <mat-card-content fxLayout="column">
+            <fieldset id="fiel1">
+
+              <mat-tab-group [selectedIndex]="selectedIndex">
+                <mat-tab color="primary" label="社區資料">
+                  <form [formGroup]="form1">
+                    <div fxLayout="column" style="padding: 16px; ">
+
+                      <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                        <mat-form-field fxFlex>
+                          <input matInput type="text" placeholder="社區名稱" required formControlName="commName"
+                            maxlength=20>
+                          <mat-error *ngIf="form1.get('commName').hasError('maxLength')">「社區名稱」不可超過40字元</mat-error>
+                          <mat-error *ngIf="form1.get('commName').hasError('required')">「社區名稱」為必填欄位</mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                        <mat-form-field fxFlex>
+                          <mat-select formControlName="commAdd1" placeholder="社區所在縣市" required
+                            (selectionChange)="changeTownshipId($event.value)">
+                            <mat-option *ngFor="let data of getCountyId" [value]="data.code">{{data.name}}</mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="form1.get('commAdd1').hasError('required')">「社區所在縣市」為必填欄位</mat-error>
+
+                        </mat-form-field>
+                      </div>
+                      <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                        <mat-form-field fxFlex>
+                          <mat-select formControlName="commAdd2" placeholder="社區所在鄉鎮市區" required>
+                            <mat-option *ngFor="let data of getTownshipId" [value]="data.code">{{data.name}}
+                            </mat-option>
+                          </mat-select>
+
+                          <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error>
+
+                        </mat-form-field>
+                      </div>
+                      <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                        <mat-form-field fxFlex>
+                          <input matInput type="text" placeholder="社區路名" required formControlName="commAdd3"
+                            maxlength=60>
+                          <mat-error *ngIf="form1.get('commAdd3').hasError('required')">「社區路名」為必填欄位</mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="end center">
+
+                      <!-- <button mat-raised-button type="button" style="margin-left: 8px;" (click)="test()" >TEST</button> -->
+                      <button mat-raised-button type="button" style="margin-left: 8px;"
+                        (click)="reset('form1')">重設</button>
+                      <button color="primary" mat-raised-button style="margin-left: 8px;" (click)="nextStep()"
+                        [disabled]="!form1.valid">下一頁</button>
+                    </div>
+                  </form>
+                </mat-tab>
+
+                <mat-tab color="primary" label="APP功能" [disabled]="!form1.valid">
+                  <div fxLayout="column" style="padding: 16px; ">
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                      <mat-form-field fxFlex>
+                        <mat-select placeholder="功能" required [(ngModel)]="AppFunction" multiple #selectInterest>
+                          <mat-select-trigger>
+                            共選擇了 {{selectInterest.selected['length']}} 個功能
+                          </mat-select-trigger>
+                          <mat-option *ngFor="let data of getAppFunctionId" [value]="data.funcId">{{data.funcName}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </mat-tab>
+
+                <mat-tab color="primary" label="住戶資料" [disabled]="!form1.valid">
+                  <form [formGroup]="form2">
+
+                    <div fxLayout="column" style="padding: 16px; ">
+
+                      <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                        <label>匯入住戶資料：</label>
+                        <input type="file" id="fileInput" (change)="fileUpload($event)" accept=".csv" />
+                      </div>
+
+                      <!-- <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                                          <table *ngIf="uploaderJpg1.queue.length>0" style="text-align:center;" border="1">
+                                            <thead>
+                                              <tr>
+                                                <th class="classtr">檔案名稱</th>
+                                                <th class="classtr">檔案大小</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr *ngFor="let item of uploaderJpg1.queue">
+                                                <td>
+                                                  <strong>{{ item?.file?.name }}</strong>
+                                                </td>
+                                                <td *ngIf="uploaderJpg1" nowrap>{{ item?.file?.size/1024/1024/1024 | number:'.2' }} MB</td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </div> -->
+                      <br>
+                      <input matInput type="text" formControlName="houseList" hidden=true>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="end center">
+
+                      <button color="primary" mat-raised-button style="margin-left: 8px;"
+                        (click)="previousStep()">上一頁</button>
+                      <button mat-raised-button type="button" style="margin-left: 8px;"
+                        (click)="reset('form2')">重設</button>
+                      <button color="primary" mat-raised-button style="margin-left: 8px;" (click)="nextStep()"
+                        [disabled]="!form2.valid">下一頁</button>
+                    </div>
+                  </form>
+                </mat-tab>
+
+                <mat-tab color="primary" label="管理員資料" [disabled]="!form1.valid">
+                  <form [formGroup]="form3">
+                    <div fxLayout="column" style="padding: 16px; ">
+                      <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                        <mat-form-field fxFlex>
+                          <input matInput type="number" placeholder="管理員帳戶組數" formControlName="admNum" maxlength='5'
+                            required>
+
+                          <mat-error *ngIf="form3.get('admNum').hasError('require')">「管理員帳戶組數」為必填欄位</mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="end center">
+
+                      <button color="primary" mat-raised-button style="margin-left: 8px;"
+                        (click)="previousStep()">上一頁</button>
+                      <button mat-raised-button type="button" style="margin-left: 8px;"
+                        (click)="reset('form3')">重設</button>
+                      <button mat-raised-button type="button" (click)="deleteClick()"
+                        style="margin-left: 8px;">刪除</button>
+                      <button color="primary" mat-raised-button style="margin-left: 8px;"
+                        [disabled]="AppFunction?  isCsvFile? !(this.form1.valid && this.form2.valid && this.form3.valid) : true: true"
+                        type="submit" (click)="onSubmit()">儲存</button>
+
+                    </div>
+                  </form>
+                </mat-tab>
+              </mat-tab-group>
+            </fieldset>
+
+          </mat-card-content>
+        </mat-card>
+      </mat-dialog-content>
+    </div>
+  </div>
+</div>
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

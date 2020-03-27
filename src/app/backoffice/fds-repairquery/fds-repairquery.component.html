@@ -1,0 +1,85 @@
+<div class="activityquery" furyPage furyPagePadding furyScrollbar>
+  <div class="demo-preview" fxLayout="row" fxLayoutAlign="center center">
+    <mat-card fxFlex="100%" >
+      <mat-card-content fxLayout="column">
+        <form [formGroup]="form1">  
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                            <h4  required>*諮詢單日期 : </h4>
+                            <mat-form-field fxFlex>
+                                <input type="text"  matInput placeholder="生效起日時間" [matDatepicker]="msgStartDate" [min]="isUpdateMode() ? null:datePickerMinDate" [max]="isUpdateMode() ? null:datePickerMaxDate"
+                                  formControlName="startDate" required readonly>
+                                <mat-datepicker-toggle [for]="msgStartDate" matSuffix></mat-datepicker-toggle>
+                                <mat-datepicker #msgStartDate touchUi="true"></mat-datepicker>
+                                <mat-error *ngIf="form1.get('startDate').hasError('required')">「生效起日時間」為必填欄位</mat-error>
+                              </mat-form-field>
+                              <mat-form-field fxFlex>
+                                <input type="text" matInput placeholder="生效迄日時間" required [matDatepicker]="msgEndDate" [min]="isUpdateMode() ? null:datePickerMinDate" [max]="isUpdateMode() ? null:datePickerMaxDate"
+                                  formControlName="endDate" readonly>
+                                <mat-datepicker-toggle [for]="msgEndDate" matSuffix></mat-datepicker-toggle>
+                                <mat-datepicker #msgEndDate touchUi="true"></mat-datepicker>
+                                <mat-error *ngIf="form1.get('endDate').hasError('required')">「生效迄日時間」為必填欄位</mat-error>
+                              </mat-form-field>
+                    </div>
+
+                    <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="8px">
+                      <mat-form-field fxFlex>
+                        <mat-select placeholder="社區" formControlName="commId">
+                          <mat-option *ngFor="let data of communityList" [value]="data.commId">{{ data.commName }}</mat-option>
+                        </mat-select>
+                        <!-- <mat-error *ngIf="form1.get('commId').hasError('required')">「社區」為必填欄位</mat-error> -->
+                      </mat-form-field>
+                    </div>
+
+                    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                              <mat-form-field fxFlex>
+                                <mat-select placeholder="諮詢單狀態" formControlName="codeNo" >
+                                  <mat-option *ngFor="let Status of changeStatusList" [value]="Status.ticketStatus">{{ Status.ticketStatusName }}</mat-option>
+                                </mat-select>
+                                <!-- <mat-error *ngIf="form1.get('codeNo').hasError('required')">「換修單狀態」為必填欄位</mat-error> -->
+                              </mat-form-field>
+                    </div>
+        </form>
+
+        <div fxLayout="row" fxLayoutAlign="end center">
+          <button color="primary" mat-raised-button style="margin-left: 8px;" (click)="getAllRepair()" type="button"  [disabled]="!(form1.get('startDate').valid && form1.get('endDate').valid)">查詢</button>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-table #table [dataSource]="dataSource" >
+      <ng-container *ngFor="let column of columns">
+          <ng-container *ngIf="column.isModelProperty" [matColumnDef]="column.property">
+              <mat-header-cell *matHeaderCellDef> {{ column.name }}</mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{ row[column.property] }}</mat-cell>
+          </ng-container>
+      </ng-container>
+
+      <ng-container matColumnDef="management">
+          <mat-header-cell *matHeaderCellDef>
+              操作
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row">
+              <button mat-icon-button mat-icon-button matTooltip="預覽" color="primary" (click)="updateCustomer(row)">
+                  <mat-icon>touch_app</mat-icon>
+              </button>
+          </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="picList">
+        <mat-header-cell *matHeaderCellDef>
+            照片
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <button mat-icon-button mat-icon-button matTooltip="預覽" color="primary" (click)="previewAct(row)">
+                <mat-icon>touch_app</mat-icon>
+            </button>
+        </mat-cell>
+    </ng-container>
+      <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: visibleColumns;"  class="clickable"></mat-row>
+  </mat-table>
+  <mat-paginator [length]="totalCount" [pageIndex]="0" [pageSize]="10"></mat-paginator>
+</div>
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>
+

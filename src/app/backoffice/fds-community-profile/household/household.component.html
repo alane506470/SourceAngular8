@@ -1,0 +1,51 @@
+<form [formGroup]="form3">
+  <div fxLayout="column" style="padding: 16px; ">
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <input formControlName="orgType" matInput type="text" placeholder="管理組織">
+        <mat-error *ngIf="form3.get('orgType').hasError('maxlength')">「管理組織」不可超過7個字</mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex>
+        <mat-select formControlName="householdType" placeholder="住戶組成">
+          <mat-option *ngFor="let data of gethousehold$ | async" [value]="data.code">{{data.name}}
+          </mat-option>
+        </mat-select>
+        <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+      </mat-form-field>
+    </div>
+
+    <div fxLayoutGap="8px">
+      <mat-form-field fxFlex>
+        <input formControlName="orgTee" matInput type="number" placeholder="管理費(每坪/元)">
+        <!-- <mat-error *ngIf="form3.get('orgTee').hasError('maxlength')">「管理費(每坪/元)」不可超過7個字</mat-error> -->
+
+      </mat-form-field>
+
+      <mat-form-field fxFlex>
+        <input formControlName="housePrice" matInput type="number" placeholder="房價行情(每坪/萬元)">
+      </mat-form-field>
+    </div>
+
+    <mat-form-field fxFlex>
+      <mat-select formControlName="appYn" placeholder="是否有使用社區管理APP">
+        <mat-option *ngFor="let data of getAppYn$ |async" [value]="data.code">{{data.name}}
+        </mat-option>
+      </mat-select>
+      <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+    </mat-form-field>
+
+    <mat-form-field fxFlex>
+      <mat-select formControlName="appName" placeholder="使用哪一家的社區管理APP">
+        <mat-option *ngFor="let data of getAppName$ |async" [value]="data.code">{{data.name}}
+        </mat-option>
+      </mat-select>
+      <!-- <mat-error *ngIf="form1.get('commAdd2').hasError('required')">「社區所在縣市」為必填欄位</mat-error> -->
+    </mat-form-field>
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
+      <button color="warn" mat-raised-button type="button" (click)="reset(this.form3)">重設</button>
+      <button mat-raised-button type="button" [disabled]="this.form3.invalid" (click)="saveForm()">儲存</button>
+      <ng-content select="button"></ng-content>
+    </div>
+  </div>
+</form>

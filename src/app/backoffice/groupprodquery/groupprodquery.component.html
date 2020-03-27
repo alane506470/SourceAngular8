@@ -1,0 +1,52 @@
+<div class="groupprodquery" furyPage furyPagePadding furyScrollbar>
+  <div class="demo-preview" fxLayout="row" fxLayoutAlign="center center">
+    <mat-card fxFlex="100%">
+      <mat-card-content fxLayout="column">
+        <form [formGroup]="form1">
+          
+          <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+            <div fxLayoutAlign="start center">適用通路*：
+              <mat-radio-group fxLayout="row" fxLayoutGap="16px" formControlName="channelId" required>
+                <mat-radio-button *ngFor="let data of getChannelId" [value]="data.codeNo">{{ data.codeExplain }}</mat-radio-button>
+              </mat-radio-group>
+              <mat-error *ngIf="form1.get('channelId').hasError('required')">「適用通路」為必填欄位</mat-error>
+            </div>
+          </div>
+          
+          <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+            <mat-form-field fxFlex>
+              <input type="text" matInput placeholder="生效起日*：" [matDatepicker]="m1" formControlName="startDate" readonly>
+              <mat-datepicker-toggle [for]="m1" matSuffix></mat-datepicker-toggle>
+              <mat-datepicker #m1 touchUi="true"></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field fxFlex>
+              <input type="text" matInput placeholder="生效迄日：" [matDatepicker]="m2" formControlName="endDate" ng-required="false" readonly>
+              <mat-datepicker-toggle [for]="m2" matSuffix></mat-datepicker-toggle>
+              <mat-datepicker #m2 touchUi="true"></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </form>
+        
+        <div fxLayout="row" fxLayoutAlign="end center">
+          <button [disabled]="checkInput()" color="primary" mat-raised-button style="margin-left: 8px;"
+          (click)="getAppClusterProd()" type="button">查詢</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <mat-table #table [dataSource]="dataSource">
+    <ng-container *ngFor="let column of columns">
+      <ng-container *ngIf="column.isModelProperty" [matColumnDef]="column.property">
+        <mat-header-cell *matHeaderCellDef> {{ column.name }}</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{ row[column.property] }}</mat-cell>
+      </ng-container>
+    </ng-container>
+    
+    <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: visibleColumns;"></mat-row>
+  </mat-table>
+  
+  <mat-paginator class="paginator" [length]="resultsLength" [pageSize]="pageSize"></mat-paginator>
+  
+</div>
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

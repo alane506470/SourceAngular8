@@ -1,0 +1,17 @@
+.mat-header-cell {
+  width: 150px;
+}
+.mat-header-cell.mat-column-member {
+  color: red;
+}
+
+mat-cell {
+  display: flex !important;
+  text-align: left;
+}
+
+mat-dialog-content {
+  height: auto;
+  max-height: 150%;
+  overflow: auto;
+}

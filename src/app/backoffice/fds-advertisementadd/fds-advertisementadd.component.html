@@ -1,0 +1,312 @@
+<div class="fds-advadd" furyScrollbar fxLayout="row" fxLayoutAlign="center center">
+  <mat-dialog-content>
+    <mat-toolbar color="primary">新增廣告活動</mat-toolbar>
+    <fieldset id="fiel1">
+      <mat-tab-group [selectedIndex]="selectedIndex">
+        <mat-tab color="primary" label="活動主檔">
+          <form [formGroup]="form1">
+            <div fxLayout="column" style="padding: 16px; ">
+              <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                <mat-form-field fxFlex>
+                  <input matInput type="text" placeholder="活動編號 :" formControlName="actId" readonly>
+                </mat-form-field>
+                <mat-form-field fxFlex>
+                  <input matInput type="text" placeholder="活動名稱" required formControlName="actDesc" maxlength=40>
+                  <mat-error *ngIf="form1.get('actDesc').hasError('required')">「活動名稱」為必填欄位</mat-error>
+                </mat-form-field>
+                <mat-form-field *ngIf="this.mode === this.create" fxFlex>
+                  <mat-select formControlName="commIds" placeholder="社區名稱" multiple #selectInterest>
+                    <mat-select-trigger>
+                      共選擇了 {{selectInterest.selected['length']}} 個社區
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let data of communityList" [value]="data.commId">{{data.commName}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field *ngIf="this.mode === this.update" fxFlex>
+                  <input matInput type="text" placeholder="社區名稱" required formControlName="commId" readonly>
+                </mat-form-field>
+              </div>
+
+              <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                <mat-form-field fxFlex>
+                  <mat-select formControlName="cutId" placeholder="APP版位" (selectionChange)="cutIdChange()" required>
+                    <mat-option *ngFor="let data of appCutTypeList" [value]="data.cutId">{{ data.cutDesc }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="form1.get('cutId').hasError('required')">「APP版位」為必填欄位</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                <mat-form-field fxFlex>
+                  <input type="text" matInput placeholder="生效起日時間" [matDatepicker]="msgStartDate"
+                    [min]="isUpdateMode() ? null:datePickerMinDate" [max]="isUpdateMode() ? null:datePickerMaxDate"
+                    formControlName="startDate" required readonly>
+                  <mat-datepicker-toggle [for]="msgStartDate" matSuffix></mat-datepicker-toggle>
+                  <mat-datepicker #msgStartDate touchUi="true"></mat-datepicker>
+                  <mat-error *ngIf="form1.get('startDate').hasError('required')">「生效起日時間」為必填欄位</mat-error>
+                </mat-form-field>
+                <mat-form-field fxFlex>
+                  <input type="text" matInput placeholder="生效迄日時間" required [matDatepicker]="msgEndDate"
+                    [min]="isUpdateMode() ? null:datePickerMinDate" [max]="isUpdateMode() ? null:datePickerMaxDate"
+                    formControlName="endDate" readonly>
+                  <mat-datepicker-toggle [for]="msgEndDate" matSuffix></mat-datepicker-toggle>
+                  <mat-datepicker #msgEndDate touchUi="true"></mat-datepicker>
+                  <mat-error *ngIf="form1.get('endDate').hasError('required')">「生效迄日時間」為必填欄位</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                <mat-form-field fxFlex>
+                  <input matInput type="text" placeholder="活動狀態" [value]="this.actStatusValue" readonly>
+                  <input matInput type="text" placeholder="活動狀態" formControlName="actStatus" hidden=true>
+                </mat-form-field>
+              </div>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="end center">
+              <button mat-raised-button type="button" style="margin-left: 8px;" (click)="reset('form1')"
+                [disabled]="this.defaults.actStatus === 'D'? true:false">重設</button>
+              <button color="primary" mat-raised-button style="margin-left: 8px;"
+                [disabled]="this.defaults.actStatus === 'D'?false:!form1.valid" (click)="nextStep()"
+                [disabled]="!form1.valid">下一頁</button>
+            </div>
+          </form>
+        </mat-tab>
+
+        <mat-tab color="primary" label="活動明細" [disabled]="!form1.valid">
+          <form [formGroup]="form2">
+            <div fxLayout="column" style="padding: 16px; ">
+              <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                <mat-form-field fxFlex>
+                  <mat-select formControlName="actType" placeholder="活動明細類別" (selectionChange)="isUploadJpg1()"
+                    required>
+                    <mat-option *ngFor="let data of actTypeList" [value]="data.codeNo">{{ data.codeExplain }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="form2.get('actType').hasError('required')">「活動明細類別」為必填欄位</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div [hidden]="this.form2.get('actType').value==='B'">
+              <div fxLayout="column" style="padding: 16px;">
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <label for="singleFile1">圖1位置*：</label>
+                  <input id="singleFile1" type="file" ng2FileSelect [uploader]="uploaderJpg1"
+                    (change)="handleFileInput($event.target.files,'JPG1');$event.target.value='';">
+                </div>
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <table *ngIf="uploaderJpg1.queue.length>0" class="uploader-table table">
+                    <thead>
+                      <tr>
+                        <th class="classtr">檔案名稱</th>
+                        <th class="classtr">檔案大小</th>
+                        <th class="classtr">上傳進度</th>
+                        <th class="classtr">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of uploaderJpg1.queue">
+                        <td>
+                          <strong>{{ item?.file?.name }}</strong>
+                        </td>
+                        <td *ngIf="uploaderJpg1" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                        <td>{{uploaderJpg1.progress}}%</td>
+                        <td>
+                          <button mat-raised-button mat-icon-button matTooltip="上傳" color="accent"
+                            (click)="fileUploadSubmit('JPG1')"
+                            [disabled]="this.defaults.actStatus === 'D'? true:!uploaderJpg1.getNotUploadedItems().length">
+                            <mat-icon>cloud_upload</mat-icon>
+                          </button>
+
+                          <button mat-raised-button mat-icon-button color="warn" matTooltip="移除"
+                            [disabled]="this.defaults.actStatus === 'D'? true:!uploaderJpg1.queue.length"
+                            (click)="uploaderJpg1.clearQueue();">
+                            <mat-icon>remove</mat-icon>
+                          </button>
+
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <br>
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+
+                  <table *ngIf="this.form2.get('actSjpgSch').value" style="text-align:center;" border="1">
+                    <thead>
+                      <tr>
+                        <th class="classtr">雲端檔案</th>
+                        <th class="classtr">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>{{this.form2.get('actSjpgSch').value}} </td>
+                        <td>
+                          <button mat-icon-button matTooltip="刪除已上傳之圖片" color="accent"
+                            (click)="serverFileRemove('JPG1')" [disabled]="this.defaults.actStatus === 'D'? true:false">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+
+                <input matInput type="text" formControlName="actSjpgSch" hidden=true>
+                <br>
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <label for="singleFile2">圖2位置：</label>
+                  <input id="singleFile2" type="file" ng2FileSelect [uploader]="uploaderJpg2"
+                    (change)="handleFileInput($event.target.files,'JPG2');$event.target.value='';">
+                </div>
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <table *ngIf="uploaderJpg2.queue.length>0" class="uploader-table table">
+                    <thead>
+                      <tr>
+                        <th class="classtr">檔案名稱</th>
+                        <th class="classtr">檔案大小</th>
+                        <th class="classtr">上傳進度</th>
+                        <th class="classtr">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of uploaderJpg2.queue">
+                        <td>
+                          <strong>{{ item?.file?.name }}</strong>
+                        </td>
+                        <td *ngIf="uploaderJpg2" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                        <td>{{uploaderJpg2.progress}}%</td>
+                        <td>
+
+                          <button mat-raised-button mat-icon-button matTooltip="上傳" color="accent"
+                            (click)="fileUploadSubmit('JPG2')"
+                            [disabled]="this.defaults.actStatus === 'D'? true:!uploaderJpg2.getNotUploadedItems().length">
+                            <mat-icon>cloud_upload</mat-icon>
+                          </button>
+
+                          <button mat-raised-button mat-icon-button color="warn" matTooltip="移除"
+                            [disabled]="this.defaults.actStatus === 'D'? true:!uploaderJpg2.queue.length"
+                            (click)="uploaderJpg2.clearQueue();">
+
+                            <mat-icon>remove</mat-icon>
+                          </button>
+
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <br>
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+
+                  <table *ngIf="this.form2.get('actBjpgSch').value" style="text-align:center;" border="1">
+                    <thead>
+                      <tr>
+                        <th class="classtr">雲端檔案</th>
+                        <th class="classtr">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>{{this.form2.get('actBjpgSch').value}} </td>
+                        <td>
+                          <button mat-icon-button matTooltip="刪除已上傳之圖片" color="accent"
+                            (click)="serverFileRemove('JPG2')" [disabled]="this.defaults.actStatus === 'D'? true:false">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <input matInput type="text" formControlName="actBjpgSch" hidden=true>
+
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <mat-form-field fxFlex hintLabel="最多輸入200個字">
+                    <input matInput type="text" placeholder="圖2連結：" formControlName="actBjpgLink" maxlength=200>
+                    <mat-hint align="end">{{ form2.get('actBjpgLink').value?.length }}/200</mat-hint>
+                  </mat-form-field>
+                </div>
+                <br>
+
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <mat-form-field fxFlex>
+                    <mat-select formControlName="lastLev" placeholder="是否為最後一階設定" required>
+                      <mat-option value="Y">YES</mat-option>
+                      <mat-option value="N">NO</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="form2.get('lastLev').hasError('required')">「是否為最後一階設定」為必填欄位</mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <mat-form-field fxFlex hintLabel="最多輸入10個數字" *ngIf="this.form1.get('cutId').value === 'G001_01'">
+                    <input matInput type="text" placeholder="遊戲代碼" required formControlName="gameId" maxlength=10>
+                    <mat-hint align="end">{{ form2.get('gameId').value?.length }}/10</mat-hint>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div
+              [hidden]="this.form2.get('actType').value==='A'? (this.form2.get('lastLev').value==='Y'? true:(this.form1.get('cutId').value === 'G001_01'? true:false)):false">
+              <div class="list-container" fxLayout="column" fxLayoutAlign="start center">
+                <div class="mat-elevation-z4">
+                  <mat-toolbar>商品清單
+                    <button mat-icon-button color="primary" matTooltip="單筆新增商品" (click)="addSkuList()"
+                      [disabled]="this.defaults.actStatus === 'D'? true:false">
+                      <mat-icon>add</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="批次新增商品" (click)="addSkuListBatch()"
+                      [disabled]="this.defaults.actStatus === 'D'? true:false">
+                      <mat-icon>folder</mat-icon>
+                    </button>
+                  </mat-toolbar>
+
+                  <mat-list [sortablejs]="skuListArray" [sortablejsOptions]="simpleOptions">
+                    <mat-list-item class="draggable" *ngFor="let list of skuListArray">
+                      <h3 matLine>商品代碼：{{ list.sku }}</h3>
+                      <p matLine>
+                        <span class="title">商品名稱：{{ list.skuName }} </span>
+                      </p>
+                      <p matLine>
+                        <span class="title">商品圖檔：{{ list.skuJpgSch }}</span>
+                      </p>
+                      <button mat-icon-button color="warn" matTooltip="移除" (click)="deleteSkuList(list)"
+                        [disabled]="this.defaults.actStatus === 'D'? true:false">
+                        <mat-icon>remove</mat-icon>
+                      </button>
+                    </mat-list-item>
+                  </mat-list>
+                </div>
+              </div>
+            </div>
+            <br>
+
+            <div fxLayout="row" fxLayoutAlign="end center">
+              <button color="primary" mat-raised-button style="margin-left: 8px;" (click)="previousStep()">上一頁</button>
+              <button mat-raised-button type="button" style="margin-left: 8px;" (click)="reset('form2')"
+                [disabled]="this.defaults.actStatus === 'D'? true:false">重設</button>
+              <button mat-raised-button type="button" *ngIf="isUpdateMode()" (click)="deleteClick()"
+                style="margin-left: 8px;" [disabled]="this.defaults.actStatus === 'D'? true:false">刪除</button>
+
+              <button color="primary" mat-raised-button style="margin-left: 8px;"
+                [disabled]="this.defaults.actStatus === 'D'? true:
+                                            this.form2.get('actType').value === 'A'?
+                                            this.form2.get('lastLev').value === 'Y'?
+                                            !(this.form1.valid && this.form2.valid):this.form1.get('cutId').value === 'G001_01'? !(this.form1.valid && this.form2.valid):
+                                            !(this.form1.valid && this.form2.valid && this.skuListArray.length>0):!(this.form1.valid && this.skuListArray.length>0)" type="submit"
+                (click)="onSubmit()">儲存</button>
+            </div>
+          </form>
+        </mat-tab>
+
+      </mat-tab-group>
+    </fieldset>
+  </mat-dialog-content>
+</div>
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

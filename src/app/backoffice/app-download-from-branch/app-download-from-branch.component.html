@@ -1,0 +1,45 @@
+<div class="app-member-prefer" furyPage furyPagePadding furyScrollbar>
+        <div fxLayout="row" fxLayout="row" fxLayoutAlign="center center">
+            <mat-card fxFlex="100%">
+                <mat-card-content fxLayout="column">
+                        <form [formGroup]="storeDownloadForm">
+
+                                <div class="container" fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">適用通路*：
+                                        <mat-radio-group fxLayout="row" fxLayoutGap="16px" formControlName="channelId" required>
+                                          <mat-radio-button *ngFor="let data of getChannelId" [value]="data.codeNo">{{ data.codeExplain }}</mat-radio-button>
+                                        </mat-radio-group>
+                                        <mat-error *ngIf="storeDownloadForm.get('channelId').hasError('required')">「適用通路」為必填欄位</mat-error>
+
+                                </div>
+
+                                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                                        <mat-form-field fxFlex>
+                                          <input type="text" matInput placeholder="生效起日時間" (ngModelChange)="StartisDefault()" [matDatepicker]="msgStartDate"
+                                            formControlName="fromDate" required readonly>
+                                          <mat-datepicker-toggle [for]="msgStartDate" matSuffix></mat-datepicker-toggle>
+                                          <mat-datepicker #msgStartDate touchUi="true"></mat-datepicker>
+                                          <mat-error *ngIf="storeDownloadForm.get('fromDate').hasError('required')">「生效起日時間」為必填欄位</mat-error>
+                                        </mat-form-field>
+                                        <mat-form-field fxFlex>
+
+                                          <input type="text" matInput (ngModelChange)="EndisDefault()" placeholder="生效迄日時間" required [matDatepicker]="msgEndDate"
+                                            formControlName="endDate" readonly>
+                                          <mat-datepicker-toggle [for]="msgEndDate" matSuffix></mat-datepicker-toggle>
+                                          <mat-datepicker #msgEndDate touchUi="true"></mat-datepicker>
+                                          <mat-error *ngIf="storeDownloadForm.get('endDate').hasError('required')">「生效迄日時間」為必填欄位</mat-error>
+                                        </mat-form-field>
+                                      </div>
+
+                        </form>
+
+                        <div fxLayout="row" fxLayoutAlign="end center">
+                            <button color="primary" mat-raised-button  (click)="getData()" type="button"  [disabled]="!(storeDownloadForm.get('fromDate').valid && storeDownloadForm.get('endDate').valid && storeDownloadForm.get('channelId').valid)">下載</button>
+                          </div>
+                </mat-card-content>
+            </mat-card>
+
+        </div>
+</div>
+
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>
+

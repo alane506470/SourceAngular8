@@ -1,0 +1,12 @@
+<div  class="print" (click)="isPrint()">
+    <a  class="link" href="javascript:window.print()" [hidden]="isClick">列印</a> 
+</div>
+
+<mat-grid-list  cols="2" rowHeight="1.5:1">
+    <mat-grid-tile *ngFor="let item of memberQrCode">
+        <span>{{item.qrAddress}}  </span>
+        <ngx-qrcode qrc-element-type="url" [qrc-value]="item.qrAddress" >{{item.qrAddress}}</ngx-qrcode>
+    </mat-grid-tile>
+</mat-grid-list>
+
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>

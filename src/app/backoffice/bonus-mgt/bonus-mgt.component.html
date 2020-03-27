@@ -1,0 +1,76 @@
+<div class="fds-advquery" furyPage furyPagePadding furyScrollbar>
+  <div class="demo-preview" fxLayout="row" fxLayoutAlign="center center">
+
+    <mat-card fxFlex="100%" >
+      <mat-card-content fxLayout="column">
+
+        <form [formGroup]="form1">
+          <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="8px">
+
+            <mat-form-field fxFlex hintLabel="最多輸入12個字">
+              <input matInput formControlName="marketId" type="text" placeholder="紅利點數活動代碼" maxlength="12">
+              <mat-hint align="end">{{ form1.get('marketId').value?.length }}/12</mat-hint>
+            </mat-form-field>
+            <mat-form-field fxFlex hintLabel="最多輸入200個字">
+              <input matInput formControlName="name" type="text" placeholder="紅利點數活動名稱" maxlength="200">
+              <mat-hint align="end">{{ form1.get('name').value?.length }}/200</mat-hint>
+            </mat-form-field>
+
+          </div>
+          <br>
+          <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+            <div fxLayoutAlign="start center">適用通路：
+              <mat-radio-group fxLayout="row" fxLayoutGap="16px" formControlName="channelId" required>
+                <mat-radio-button *ngFor="let data of getChannelId" [value]="data.codeNo">{{ data.codeExplain }}</mat-radio-button>
+              </mat-radio-group>
+              <mat-error *ngIf="form1.get('channelId').hasError('required')">「適用通路」為必填欄位</mat-error>
+            </div>
+          </div>
+        </form>
+        <div fxLayout="row" fxLayoutAlign="end center">
+          
+          <button color="primary" 
+          [disabled]="!this.form1.valid"
+          mat-raised-button style="margin-left: 8px;" (click)="getBonusStock()" type="button">查詢</button>
+        </div>
+
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+       <mat-table #table [dataSource]="dataSource" >
+
+    <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- fullName Column -->
+    <ng-container *ngFor="let column of columns">
+      <ng-container *ngIf="column.isModelProperty" [matColumnDef]="column.property">
+        <mat-header-cell *matHeaderCellDef > {{ column.name }}</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{ row[column.property] }}</mat-cell>
+      </ng-container>
+    </ng-container>
+
+    <ng-container matColumnDef="management">
+      <mat-header-cell *matHeaderCellDef>
+          操作
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row">
+          <button *ngIf="row.bsStatus_TW !== '發佈'" mat-icon-button mat-icon-button matTooltip="活動發佈" color="primary" (click)="sendAct(row)">
+              <mat-icon>playlist_add_check</mat-icon>
+          </button>
+          <button *ngIf="row.bsStatus_TW === '發佈'" [disabled]="true"  mat-icon-button matTooltip="已發佈" color="primary">
+            <mat-icon>playlist_add_check</mat-icon>
+          </button>
+      </mat-cell>
+  </ng-container>
+
+    <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: visibleColumns;"  class="clickable"></mat-row>
+  </mat-table>
+
+  <mat-paginator class="paginator" [length]="resultsLength" [pageSize]="pageSize"></mat-paginator>
+      
+      </div>
+      <fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>
+      

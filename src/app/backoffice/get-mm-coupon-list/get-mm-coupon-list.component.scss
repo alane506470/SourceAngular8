@@ -1,0 +1,50 @@
+@import "../../../styles/_var.scss";
+.getmmcouponlist {
+    padding: $spacing;
+}
+
+.actions {
+    .create {
+        margin-left: $spacing;
+    }
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+mat-cell {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+mat-header-cell {
+    display: flex;
+    justify-content: center;
+}
+
+.card-detail {
+    text-align: center;
+    width: 100%;
+    border-radius: 25px;
+    border-spacing: 0;
+    border: 3px #FFD382 dashed;
+}
+
+h5 {
+    padding-top: 10px;
+    color: black;
+    font-size: 18px;
+}
+
+h5>span {
+    font-weight: bold;
+    color: #ed6d00;
+    font-size: 24px;
+}
+.used{
+    width:150px;
+    color  :red;
+    font-size: 30px;
+    font-weight: bolder ;
+}

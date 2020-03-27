@@ -1,0 +1,311 @@
+<div class="messagequery" furyPage furyPagePadding furyScrollbar>
+  <div class="demo-preview" fxLayout="row" fxLayoutAlign="center center">
+    <mat-card fxFlex="100%" style="padding: 0;">
+      <mat-toolbar color="primary">管理者功能</mat-toolbar>
+      <mat-card-content fxLayout="column">
+        <mat-tab-group>
+          <mat-tab color="primary" label="訊息管理">
+            <div fxLayout="column" style="padding: 16px; ">
+              <br>
+              <form [formGroup]="form1">
+
+                <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="8px">
+
+                  <mat-form-field fxFlex>
+                    <mat-select formControlName="msgType" placeholder="訊息類別" required>
+                      <mat-option *ngFor="let giftyype of msgTypeList" [value]="giftyype.codeNo">{{giftyype.codeNo}} -- {{ giftyype.codeExplain }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="form1.get('msgType').hasError('required')">「訊息類別」為必填欄位</mat-error>
+                  </mat-form-field>
+                  <mat-form-field fxFlex hintLabel="最多輸入20個字">
+                    <input matInput type="text" placeholder="訊息主題" formControlName="msgSub" maxlength=20>
+                    <mat-hint align="end">{{ form1.get('msgSub').value?.length }}/20</mat-hint>
+                  </mat-form-field>
+
+                </div>
+
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <mat-label fxLayoutAlign="start center">
+                    <!-- <input name="name" matInput placeholder="發送日期區間"> -->
+                    發送開始日期區間 ：
+                  </mat-label>
+
+                  <mat-form-field fxFlex>
+                    <input type="text" matInput placeholder="起" [matDatepicker]="m1" formControlName="msgStartDate" readonly>
+                    <mat-datepicker-toggle [for]="m1" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #m1 touchUi="true"></mat-datepicker>
+                  </mat-form-field>
+
+                  <mat-form-field fxFlex>
+                    <input type="text" matInput placeholder="迄" [matDatepicker]="m2" formControlName="msgEndDate" readonly>
+                    <mat-datepicker-toggle [for]="m2" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #m2 touchUi="true"></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div fxLayoutAlign="start center">適用通路*：
+                  <mat-radio-group fxLayout="row" fxLayoutGap="16px" formControlName="channelId" required>
+                    <mat-radio-button *ngFor="let data of getChannelId" [value]="data.codeNo">{{ data.codeExplain }}</mat-radio-button>
+                  </mat-radio-group>
+                  <mat-error *ngIf="form1.get('channelId').hasError('required')">「適用通路」為必填欄位</mat-error>
+
+                </div>
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <mat-form-field fxFlex>
+                    <mat-select formControlName="msgStatus" placeholder="訊息狀態">
+                      <mat-option *ngFor="let msgStatus of getMsgStatus" [value]="msgStatus.codeNo">{{ msgStatus.codeExplain }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <br>
+                <div style="font-weight: bold;color:red;">※ 注意！「新會員」訊息會自動發送，無須在此設定</div>
+
+              </form>
+              <div fxLayout="row" fxLayoutAlign="end center">
+
+                <button color="primary" [disabled]="!this.form1.valid" mat-raised-button style="margin-left: 8px;" (click)="getMsgStock()"
+                  type="button">查詢</button>
+              </div>
+              <mat-table #table [dataSource]="dataSourceMsg">
+                <ng-container *ngFor="let column of columnsMsg">
+                  <ng-container *ngIf="column.isModelProperty" [matColumnDef]="column.property">
+                    <mat-header-cell *matHeaderCellDef> {{ column.name }}</mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{ row[column.property] }}
+
+                    </mat-cell>
+
+                  </ng-container>
+
+                </ng-container>
+                <ng-container matColumnDef="management">
+                  <mat-header-cell *matHeaderCellDef>
+                    立即發送
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <button mat-icon-button mat-icon-button matTooltip="立即發送" color="primary" (click)="sendMsg(row)" [disabled]=" row.msgStatus==='E'? true: false">
+                      <mat-icon>mail</mat-icon>
+                    </button>
+                    <!-- <button mat-icon-button mat-icon-button matTooltip="發送推播" color="primary" (click)="sendPush(row)">
+                    <mat-icon>message</mat-icon>
+                  </button>
+                  <button mat-icon-button mat-icon-button matTooltip="二次推播" color="primary" (click)="secPush(row)">
+                    <mat-icon>looks_two</mat-icon>
+                  </button> -->
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="task">
+                  <mat-header-cell *matHeaderCellDef>
+                    排程發送
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <button mat-icon-button mat-icon-button matTooltip="排程發送" color="primary" (click)="sendTask(row)" [disabled]=" row.msgStatus==='E'? true: false">
+                      <mat-icon>access_time</mat-icon>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="management">
+                  <mat-header-cell *matHeaderCellDef>操作</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <button type="button" mat-icon-button [matMenuTriggerFor]="actionsMenu" (click)="$event.stopPropagation()">
+                      <mat-icon>more_horiz</mat-icon>
+                    </button>
+            
+                    <mat-menu #actionsMenu="matMenu" yPosition="below" xPosition="before">
+                      <button (click)="sendMsg(row)" mat-menu-item>
+                        <span>發送訊息</span>
+                      </button>
+                      <button (click)="sendPush(row)" mat-menu-item>
+                        <span>發送推播</span>
+                      </button>
+                      <button (click)="secPush(row)" mat-menu-item>
+                        <span>二次推播</span>
+                      </button>
+                    </mat-menu>
+                  </mat-cell>
+                </ng-container>
+             -->
+                <mat-header-row *matHeaderRowDef="visibleColumns('msg')"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: visibleColumns('msg');"></mat-row>
+              </mat-table>
+              <mat-paginator #paginatorMsg class="paginator" [length]="resultsLengthMsg" [pageSize]="pageSize" (page)="changePage($event,'msg')"></mat-paginator>
+            </div>
+          </mat-tab>
+          <mat-tab color="primary" label="推播管理">
+            <div fxLayout="column" style="padding: 16px; ">
+
+              <br>
+              <form [formGroup]="form2">
+                <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="8px">
+                  <mat-form-field fxFlex hintLabel="最多輸入20個字">
+                    <input matInput type="text" placeholder="推播主題" required formControlName="pushSub" maxlength=20>
+                    <mat-hint align="end">{{ form2.get('pushSub').value?.length }}/20</mat-hint>
+                  </mat-form-field>
+
+                </div>
+                <br>
+                <!-- <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <div fxLayoutAlign="start center">推播狀態：
+                    <mat-radio-group fxLayout="row" fxLayoutGap="16px" formControlName="pushStatus" required>
+                      <mat-radio-button *ngFor="let data of getPushStatus" [value]="data.codeNo">{{ data.codeExplain }}</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </div> -->
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <mat-label fxLayoutAlign="start center">
+                    發送開始日期區間 ：
+                  </mat-label>
+                  <mat-form-field fxFlex>
+                    <input type="text" matInput placeholder="起" [matDatepicker]="m3" formControlName="pushStartDate" readonly>
+                    <mat-datepicker-toggle [for]="m3" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #m3 touchUi="true"></mat-datepicker>
+                  </mat-form-field>
+
+                  <mat-form-field fxFlex>
+                    <input type="text" matInput placeholder="迄" [matDatepicker]="m4" formControlName="pushEndDate" readonly>
+                    <mat-datepicker-toggle [for]="m4" matSuffix></mat-datepicker-toggle>
+                    <mat-datepicker #m4 touchUi="true"></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div fxLayoutAlign="start center">適用通路*：
+                  <mat-radio-group fxLayout="row" fxLayoutGap="16px" formControlName="channelId" required>
+                    <mat-radio-button *ngFor="let data of getChannelId" [value]="data.codeNo">{{ data.codeExplain }}</mat-radio-button>
+                  </mat-radio-group>
+                  <mat-error *ngIf="form2.get('channelId').hasError('required')">「適用通路」為必填欄位</mat-error>
+
+                </div>
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <mat-form-field fxFlex>
+                    <mat-select formControlName="pushStatus" placeholder="推播狀態">
+                      <mat-option *ngFor="let pushStatus of getPushStatus" [value]="pushStatus.codeNo">{{ pushStatus.codeExplain }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+              </form>
+              <div fxLayout="row" fxLayoutAlign="end center">
+                <button color="primary" [disabled]="!this.form2.valid" mat-raised-button style="margin-left: 8px;" (click)="getPushStock()"
+                  type="button">查詢</button>
+              </div>
+              <!-- <div *ngFor="let column of columnsPush">{{ column.name }}</div> -->
+              <mat-table #table [dataSource]="dataSourcePush">
+                <ng-container *ngFor="let aa of columnsPush">
+                  <ng-container *ngIf="aa.isModelProperty" [matColumnDef]="aa.property">
+                    <mat-header-cell *matHeaderCellDef> {{ aa.name }}</mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{ row[aa.property] }}
+                    </mat-cell>
+                  </ng-container>
+                </ng-container>
+                <ng-container matColumnDef="management">
+                  <mat-header-cell *matHeaderCellDef>
+                    立即發送
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <button mat-icon-button mat-icon-button matTooltip="立即發送" color="primary" (click)="sendPush(row)" [disabled]=" row.pushStatus==='E'? true: false">
+                      <mat-icon>message</mat-icon>
+                    </button>
+                    <!-- <button mat-icon-button mat-icon-button matTooltip="二次推播" color="primary" (click)="secPush(row)">
+                      <mat-icon>looks_two</mat-icon>
+                    </button> -->
+                  </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="task">
+                  <mat-header-cell *matHeaderCellDef>
+                    排程發送
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <button mat-icon-button mat-icon-button matTooltip="排程發送" color="primary" (click)="sendPushTask(row)" [disabled]=" row.msgStatus==='E'? true: false">
+                      <mat-icon>access_time</mat-icon>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="visibleColumns('push')"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: visibleColumns('push');"></mat-row>
+              </mat-table>
+              <mat-paginator #paginatorPush class="paginator" [length]="resultsLengthPush" [pageSize]="pageSize" (page)="changePage($event,'push')"></mat-paginator>
+            </div>
+
+          </mat-tab>
+          <mat-tab color="primary" label="活動發佈">
+            <div fxLayout="column" style="padding: 16px; ">
+
+              <br>
+              <form [formGroup]="form3">
+                <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="8px">
+                  <mat-form-field fxFlex hintLabel="最多輸入40個字">
+                    <input matInput type="text" placeholder="活動名稱" formControlName="actDesc" required maxlength=40>
+                    <mat-hint align="end">{{ form3.get('actDesc').value?.length }}/40</mat-hint>
+                    <mat-error *ngIf="form3.get('actDesc').hasError('required')">「活動名稱」為必填欄位</mat-error>
+                  </mat-form-field>
+                  <mat-form-field fxFlex>
+                    <mat-select formControlName="cutId" placeholder="APP版位" required>
+                      <mat-option *ngFor="let data of cutTypeList" [value]="data.cutId">{{ data.cutDesc }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="form3.get('cutId').hasError('required')">「APP版位」為必填欄位</mat-error>
+                  </mat-form-field>
+                </div>
+                <br>
+                <div fxLayoutAlign="start center">適用通路*：
+                  <mat-radio-group fxLayout="row" fxLayoutGap="16px" formControlName="channelId" required>
+                    <mat-radio-button *ngFor="let data of getChannelId" [value]="data.codeNo">{{ data.codeExplain }}</mat-radio-button>
+                  </mat-radio-group>
+                  <mat-error *ngIf="form3.get('channelId').hasError('required')">「適用通路」為必填欄位</mat-error>
+
+                </div>
+
+                <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="8px">
+                  <mat-form-field fxFlex>
+                    <mat-select formControlName="actStatus" placeholder="活動狀態">
+                      <mat-option *ngFor="let actStatus of getActStatus" [value]="actStatus.codeNo">{{ actStatus.codeExplain }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </form>
+              <div fxLayout="row" fxLayoutAlign="end center">
+                <button color="primary" [disabled]="!this.form3.valid" mat-raised-button style="margin-left: 8px;" (click)="getActStock()"
+                  type="button">查詢</button>
+              </div>
+
+
+              <mat-table #table [dataSource]="dataSourceAct">
+                <ng-container *ngFor="let column of columnsAct">
+                  <ng-container *ngIf="column.isModelProperty" [matColumnDef]="column.property">
+                    <mat-header-cell *matHeaderCellDef> {{ column.name }}</mat-header-cell>
+                    <mat-cell *matCellDef="let row"> {{ row[column.property] }}</mat-cell>
+                  </ng-container>
+                </ng-container>
+                <ng-container matColumnDef="management">
+                  <mat-header-cell *matHeaderCellDef>
+                    操作
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <!-- <button mat-icon-button mat-icon-button matTooltip="上稿測試" color="primary" (click)="sendMsg(row)">
+                      <mat-icon>playlist_add</mat-icon>
+                    </button> -->
+                    <button mat-icon-button mat-icon-button matTooltip="正式上稿" color="primary" (click)="sendAct(row)">
+                      <mat-icon>playlist_add_check</mat-icon>
+                    </button>
+                    <button mat-icon-button mat-icon-button matTooltip="預覽" color="primary" (click)="previewAct(row)">
+                      <mat-icon>remove_red_eye</mat-icon>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="visibleColumns('act')"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: visibleColumns('act');"></mat-row>
+              </mat-table>
+
+              <mat-paginator #paginatorAct class="paginator" [length]="resultsLengthAct" [pageSize]="pageSizeAct" (page)="changePage($event,'act')"></mat-paginator>
+
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- <button color="primary" mat-raised-button style="margin-left: 8px;" (click)="test()" type="button">TEST</button> -->
+
+</div>
+<fury-loading-overlay [isLoading]="isLoading"></fury-loading-overlay>
